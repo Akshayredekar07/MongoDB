@@ -1,0 +1,196 @@
+
+Ordered Insertion
+WriteConcern
+Atomaticity
+
+
+Ordered Insertion in Bulk Insertions:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We can perfrom bulk inserts either by using insertMany() or insert() methods.
+All documents present inside given array will be inserted into collection
+
+```
+Database: DurgaDB
+alphabet collection
+some documents-->buik Insertion
+insert([{}, {}, {}])
+
+db.alphabet.insertMany([{'A':"apple"}, {'B':"banana"}, {'C':"cat"}])
+
+    >> It is the javascript objects
+
+``````````
+DurgaDB> db.alphabet.insertMany([{'A':"apple"}, {'B':"banana"}, {'C':"cat"}])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId("66c3877aff7bfa1f8d69ff18"),
+    '1': ObjectId("66c3877aff7bfa1f8d69ff19"),
+    '2': ObjectId("66c3877aff7bfa1f8d69ff1a")
+  }
+}
+DurgaDB>
+
+
+```````````Default behaviour of bulk insertion```````````````
+>> While performing bulk insertion, if any document insertion fails then the rest of the documents won't be inserted. i.e The documents which are already inserted won't be rollbacked.
+
+db.cars.insertMany([{_id:100, M:"Maruti"}, {_id:200, A:"Audi"}, {_id:300, B:"Benz"}])
+
+db.cars.find().pretty()
+
+db.cars.insertMany([{_id:400, N:"Nexon"}, {_id:400, K:"Kia"}, {_id:300, B:"Benz"}])
+
+
+```````````
+Uncaught:
+MongoBulkWriteError: E11000 duplicate key error collection: DurgaDB.cars index: _id_ dup key: { _id: 400 }
+Result: BulkWriteResult {
+  insertedCount: 1,
+  matchedCount: 0,
+  modifiedCount: 0,
+  deletedCount: 0,
+  upsertedCount: 0,
+  upsertedIds: {},
+  insertedIds: { '0': 400, '1': 400, '2': 300 }
+}
+Write Errors: [
+  WriteError {
+    err: {
+      index: 1,
+      code: 11000,
+      errmsg: 'E11000 duplicate key error collection: DurgaDB.cars index: _id_ dup key: { _id: 400 }',
+      errInfo: undefined,
+      op: { _id: 400, K: 'Kia' }
+    }
+  }
+]
+`````````````````
+
+
+We can customize this behaviour:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> We can customize in such way that if one document fails to  insert , still the remaining documents can be inserted
+
+>> For this we have to use ordered property
+
+>> db.cars.insertMany([{},{},{}], {ordered:false})
+
+>> The default value ofr ordered is true.
+
+>>IF ordered is false, then if one document insertion fails, rest of the documents will be inserted without any problem
+--------------------
+>> db.cars.insert([{_id:400, I:"Innova"}, {_id:500, R:"Ritz"}], {ordered:false})
+
+
+Q. How to rollbacked already insetred documents in the case of any error in the bulk inserts?
+>> By using Transctions
+
+Transfer 10K from, my account to sunny account
+Operation-1: debit 10K from my account
+Operation-2: credit 10k to sunny account
+
+
+Q. What is the purpose of ordered property in insert Operation?
+Q. While performing bulk insert operation by using either insertMany() or insert() method, if one document insertion fails, rest of the documents will be inserted or not?
+
+>> By default NO 
+But we can customize this behaviour by using ordered property
+
+Q1. Assume cars collection is empty:
+How many records should be inserted in collection?
+
+db.cars.insert([{_id:400, I:"Innova"}, {_id:400, R:"Ritz"}], {ordered:true})
+
+ans: 1
+
+Q2. Assume cars collection is empty:
+How many records should be inserted in collection?
+
+db.cars.insert([{_id:400, I:"Innova"}, {_id:700, L:"RangeRover"}, {_id:400, R:"Ritz"},  {_id:900, M:"Thar"}], {ordered:false})
+
+ans: 3
+
+
+```````````````````````
+WriteConcern property`````````````````````````````
+```````````````````````
+
+>> Similar to ordered property
+
+>> db.cans.find()
+>> db.cars.drop()
+
+>> db.cars.insertOne({I:"Innova"})
+
+``````
+Usecase-1:
+Whenever we are performing insert operation, bydefault the shell/client will wait until getting acknowledgement after completing insertion operation. This may reduce performance at client side. 
+
+DurgaDB> db.alphabet.insertMany([{'A':"apple"}, {'B':"banana"}, {'C':"cat"}])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId("66c3877aff7bfa1f8d69ff18"),
+    '1': ObjectId("66c3877aff7bfa1f8d69ff19"),
+    '2': ObjectId("66c3877aff7bfa1f8d69ff1a")
+  }
+}
+
+
+>> We can customize this behaviour by using WriteConcern property.
+
+>>  db.collection.insertOne({}, {WriteConcern:{w:0}})
+
+    w:1 ==> It is the default value and client will wait until getting acknowledgement.
+    w:0 ==> It means client won't wail for acknowledgement.
+
+
+>> db.cars.insertOne({B:"BMW"}, {WriteConcern:{w:1}})
+>> db.cars.insertOne({F:"Farrari"}, {WriteConcern:{w:0}})
+
+db.cars.insertMany(
+  [
+    { brand: "Ferrari", model: "488 Spider" },
+    { brand: "Lamborghini", model: "Huracan" },
+    { brand: "Porsche", model: "911 Turbo S" }
+  ],
+  { writeConcern: { w: 0 } }
+);
+
+
+>> If lakhs of records are requied
+``````````
+Usecase-2``````````````
+
+In production, for every Database we have to  maintain cloned/replica database because 
+    1. To handle fail over situation
+    2. for load balancing purpose
+
+    A single document is required to insert in multiple database instances primary database, replica-1, replica-2 etc.
+
+    After inserting how many instance, you are expecting acknowledgement, we can specify this property by using WriteConcern.
+
+    if w: 0 ==> No acknowledgement
+    if w: 1 ==> acknowledgement after inserting document in primary database.
+    if w: 2 ==> acknowledgement after inserting document in primary database and replica-1.
+    if w: 3 ==> acknowledgement after inserting document in primary database, replica-1 and replica-2.
+
+
+>> db.cars.insertOne(
+  { A: "Audi" },
+  { writeConcern: { w: 3 } }
+);
+
+`````
+DurgaDB> db.cars.insertOne({B:"Benz"}, {writeConcern:{w:3}})
+MongoServerError: cannot use 'w' > 1 when a host is not replicated
+```````````
+
+    This is not logical because the replica database is not avilable 
+
+    ```
+
+
+    

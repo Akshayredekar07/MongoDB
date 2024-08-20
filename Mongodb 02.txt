@@ -1,0 +1,91 @@
+Document type database/NoSQL database:
+
+Document
+No schema
+Not required to have join quries --> performance is more 
+e.g mongoDB, Cassandra, HBase etc 
+
+MongoDB
+~~~~~~~
+
+MongoDB shell client vs MonogDB Server :
+
+Once we installed MongoDB, we will get mongoDB shell and mongoDB Server
+These are JavaScript based application
+
+MongoDB server is responsible to storre our data in the database.
+Mongodb shell is responsible to manage server
+By using this shell we can perform all required CRUD operations.
+
+MongoDB server can be local or remote.
+
+To launch/Start MongoDB Server ----> mongod command 
+To launch/Start MongoDB Shell ----> mongo command 
+
+GUI support is also there for MongoDB Shell :
+    Compass
+    Tobo T3
+    etc 
+
+MongoDB Driver:
+~~~~~~~~~~~~~~~
+
+application (Java/Python/Node/C#)
+
+From Application(Java, Python, etc) if we want ot communicate with databasesome software must be required, which is nothing but
+driver software 
+
+MongoDB website:
+
+Docs >> Driver >> Choose the language 
+
+
+Installation
+Community version
+
+Go to the the installed direcotry:
+
+cd "C:\Program Files\MongoDB\Server\7.0\bin"
+
+open terminal >> mongod -version
+{{ This command only works in this location :
+C:\Program Files\MongoDB\Server\7.0\bin       }}
+
+PS C:\Program Files\MongoDB\Server\7.0\bin> mongod -version
+db version v7.0.3
+Build Info: {
+    "version": "7.0.3",
+    "gitVersion": "b96efb7e0cf6134d5938de8a94c37cec3f22cff4",
+    "modules": [],
+    "allocator": "tcmalloc",
+    "environment": {
+        "distmod": "windows",
+        "distarch": "x86_64",
+        "target_arch": "x86_64"
+    }
+}
+
+
+2nd command: >> mongo -version 
+PS C:\Program Files\MongoDB\Server\7.0\bin> mongosh -version
+2.0.2
+
+
+
+To start the server : mongod --dbpath "c\data\db"
+
+to launch the mongoshell : mongosh 
+
+db.version()  ---> current version of the server
+db.watch()
+db.help()
+
+db.stats()
+
+show dbs
+
+show collections
+
+use test
+
+estore, student

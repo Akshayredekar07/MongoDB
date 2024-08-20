@@ -1,0 +1,111 @@
+[
+    {
+        "Title": "MongoDB",
+        "isbn": "2345",
+        "reviews": 5,
+        "versions": {
+            "version1": 2015,
+            "version2": 2017
+        }
+    },
+    {
+        "Title": "NoSQL",
+        "isbn": "2346",
+        "reviews": 41,
+        "versions": {
+            "version1": 2001,
+            "version2": 2004
+        }
+    },
+    {
+        "Title": "Advanced python with Durga",
+        "isbn": "1111",
+        "reviews": 7000,
+        "versions": { "version1": 2019, "version2": 2021 }
+      },
+      {
+        "Title": "Java with Durga",
+        "isbn": "9876",
+        "reviews": 675,
+        "versions": { "version1": 2013, "version2": 2016 }
+      },
+
+
+
+
+
+      
+      {
+        "category": "Software Engineering",
+        "books": [
+          {
+            "title": "Clean Code: A Handbook of Agile Software Craftsmanship",
+            "author": "Robert C. Martin",
+            "publishedYear": 2008,
+            "ISBN": "9780132350884",
+            "genres": ["Software Engineering", "Programming"],
+            "language": "English",
+            "pages": 431,
+            "reviews": [
+              {
+                "reviewer": "Alice Johnson",
+                "rating": 5,
+                "comment": "A must-read for all developers!"
+              },
+              {
+                "reviewer": "Bob Lee",
+                "rating": 4,
+                "comment": "Great insights, but some parts are repetitive."
+              }
+            ]
+          },
+          {
+            "title": "Design Patterns: Elements of Reusable Object-Oriented Software",
+            "author": [
+              "Erich Gamma",
+              "Richard Helm",
+              "Ralph Johnson",
+              "John Vlissides"
+            ],
+            "publishedYear": 1994,
+            "ISBN": "9780201634983",
+            "genres": ["Software Engineering", "Design Patterns"],
+            "language": "English",
+            "pages": 395,
+            "reviews": [
+              {
+                "reviewer": "Charlie Brown",
+                "rating": 5,
+                "comment": "A foundational book for understanding design patterns."
+              }
+            ]
+          },
+          {
+            "title": "The Pragmatic Programmer: Your Journey to Mastery",
+            "author": [
+              "Andrew Hunt",
+              "David Thomas"
+            ],
+            "publishedYear": 1999,
+            "ISBN": "9780201616222",
+            "genres": ["Software Engineering", "Programming"],
+            "language": "English",
+            "pages": 320,
+            "reviews": [
+              {
+                "reviewer": "David White",
+                "rating": 4,
+                "comment": "Full of practical advice for programmers."
+              },
+              {
+                "reviewer": "Emma Green",
+                "rating": 4,
+                "comment": "Good book, but some advice feels dated."
+              }
+            ]
+          }
+        ]
+      }
+      
+]
+

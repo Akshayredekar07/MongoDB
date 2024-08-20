@@ -1,0 +1,246 @@
+
+Databse     ---> several collections
+collections ---> several documents 
+
+collection  --> tables
+document    -->record/row
+
+MongoDB shell vs MongoDB server
+
+Start MongoDB server :  mongod 
+Start MongoDB client : mongosh
+
+Shell - is like a client with the help of shell we can send the quries to server 
+
+https://claude.site/artifacts/a8482635-e1c1-4dab-97ef-17f37a6f2820
+
+
+~~~~~~~~~~~~~~~Default databases in MongoDB~~~~~~~~~~~~~~~~~~~~~~
+
+
+1.admin
+
+>> admin database is used to store user authnetication information like usename, passwords, roles etc
+>> this database is used by adminstrators while creating, deleting and updating the usersand while assigning the roles
+
+2. config 
+
+>> The configuration of the mongodb server.
+
+3. local
+
+>> Local database can be used by the admin while performing Replication process
+
+Dont try to delete thid databses?
+Otherwise mongodb server not work properly
+
+
+Data format in MongoDB:
+~~~~~~~~~~~~~~~~~~~~~~~
+
+End user/Devloper will provide data in json form.
+In MongoDB server data will be stored in BSON form.
+
+JSON : {"name":"durga"} ---> BSON and that BSON will be stored 
+BSON is binary json 
+
+Why this conversion is required:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. In javascrpit only 6 types are avilable.
+String , Number, Array, Boolean, Null
+
+But BSON provides some extra types also like:
+32-Bit Integer -->NumberInt
+ObjectID
+Date 
+etc
+
+2. BSON format requries less memory 
+JSON ---> requires 10 KB
+BSON ---> 4 to 5 KB
+
+Note: Efficient Storage and extra datatypes are speciality of BSON over JSON
+
+While retriveing also, BSON will be convetred to JSON by mongodb server??
+>>At the time of retrival BSON data will eb converted inot EJSON for understanding purpose.
+
+
+Insertion of document/creation:    ---> JSON to BSON
+Read Operation/retrival Operation: ---> BSON to EJSON
+
+Q. What data foramts used in MongoDB??
+Ans : 3 formats - JSON, BSON, EJSON
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Creation of database and collection:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Creation of database command: 
+>> use durgadb
+Database won't we created begining, Database will be created dynamically.
+Whenever we are creating collection or inserting document then database will be created dynamically.
+
+
+how to create the collection:~
+>> db.createCollection("Employees")
+
+To view the databses:~
+>>show dbs
+
+db is the predefined object in the mongodb on which we can use methods
+
+show collections:~
+>>show collections
+
+durga> db.createCollection("Students")
+{ ok: 1 }
+durga>
+
+durga> show collections
+Employees
+Students
+
+
+Q. How to drop collection?
+>> db.Students.drop()
+
+Q. How to drop the database?
+>> db.dropDatabase()
+
+>> db.getName()
+
+
+Basic CRUD Operation using MongoDB:
+
+1. Create/Insert a document:
+
+>> db.collection.insert()
+>> db.collection.insertOne()
+>> db.collection.insertMany()
+
+
+>> db.Students.insertOne({roll:23, name:"Akshay", university:"SPPU"})
+>> db.Students.insertOne({roll:27, name:"Rohit", university:"SPPU"})
+>> db.Students.insertOne({roll:31, name:"Karan", university:"SPPU"})
+
+2. Read/Retrival of document:
+
+>> db.collection.find()    ---To get all records in the collection
+>> db.collection.findOne() ---To get one records in the collection based on the match condition
+
+>> db.Students.find()
+>> db.Students.findOne()
+
+~To print data in more readble format
+>> db.Students.find().pretty()
+
+durga> db.Students.find()
+[
+  {
+    _id: ObjectId("66b1e34658b89e920b32fc84"),
+    roll: 23,
+    name: 'Akshay',
+    university: 'SPPU'
+  },
+  {
+    _id: ObjectId("66b1e3a158b89e920b32fc85"),
+    roll: 27,
+    name: 'Rohit',
+    university: 'SPPU'
+  },
+  {
+    _id: ObjectId("66b1e3b158b89e920b32fc86"),
+    roll: 31,
+    name: 'Karan',
+    university: 'SPPU'
+  }
+]
+
+
+3. Update document:
+
+>> db.collection.updateOne()
+>> db.collection.updateMany()
+>> db.collection.replceOne()
+
+>> db.Students.updateOne({name: 'Rohit'}, {university: 'BAMU'})
+~If university filed is avilable then old value of university is replce with replce with new value
+~And if filed is not alreadly aviable then new filed will be created 
+
+The query give error:
+durga> db.Students.updateOne({name: 'Rohit'}, {university: 'BAMU'})
+MongoInvalidArgumentError: Update document requires atomic operators
+
+db.Students.updateOne({name: 'Rohit'}, { $set: {university: 'BAMU'}})
+
+```
+durga> db.Students.updateOne({name: 'Rohit'}, { $set: {university: 'BAMU'}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+```
+
+If anything perfixed with $ symbol, then it is predefined word in MongoDB 
+
+
+4. Delete record/document:
+
+>> db.collection.deleteOne()
+>> db.collection.deleteMany()
+
+>> db.Students.deleteOne({name:"Karan"})
+
+durga> db.Students.deleteOne({name:"Karan"})
+{ acknowledged: true, deletedCount: 1 }
+
+
+Note: use Studentdb
+
+>> db.Students.insertOne({name:"Rohit",city:"beed"})
+
+"Note: Databases and collections are created dynamically when a document is inserted."
+
+
+
+
+
+MongoDB Basics and Operations
+
+Database Structure
+Database: Contains several collections
+Collections: Contain several documents
+Collection: Equivalent to tables in SQL
+Document: Equivalent to records/rows in SQL
+MongoDB Shell vs MongoDB Server
+Start MongoDB Server: mongod
+Start MongoDB Client: mongosh
+MongoDB Shell: Acts as a client through which we can send queries to the server.
+
+Default Databases in MongoDB
+admin
+Stores user authentication information like usernames, passwords, roles, etc.
+Used by administrators for creating, deleting, updating users, and assigning roles.
+config
+Stores the configuration of the MongoDB server.
+local
+Used by the admin during the replication process.
+Should not be deleted as it can cause MongoDB server issues.
+Data Format in MongoDB
+JSON: {"name":"durga"}
+BSON: Binary JSON used for efficient storage and additional data types.
+EJSON: Extended JSON used during data retrieval for readability.
+Conversion:
+
+Insertion: JSON to BSON
+Retrieval: BSON to EJSON
+Why BSON?
+
+Extra data types (e.g., 32-bit integers, ObjectIDs, Date)
+Efficient storage (BSON requires less memory than JSON)
