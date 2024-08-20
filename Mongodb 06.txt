@@ -1,0 +1,111 @@
+
+The Big story of the insert operation:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. insertOne(), insertMany(), insert()
+2. Insert documents from javascript file using load()
+3. Insert documents from json or csv file by using mongoimport
+4. Nested documents
+5. Arrays in documents
+6. ObjectId
+7. Orderderd Insertion
+8. WriteConcern
+9. Automicity
+
+What is meant by Automicity?
+>> Q. Assume we have to insert a document where 100 fields are avilable, afetr inserting 50 fields if database server faces some problem then what will happpened?
+
+Ans: Whatever fields already added will be rollbacked.
+
+mnogoDB server stores either complete docuemnt or nothing. It won't store part of the docuemnt. i.e. CRUD operation are automic at docuemnt level.
+
+db.collection.insertMany([{}, {}, {}, {}]);
+
+But while inserting bulk insertion (multiple insertion), after inserting some docuemnts if database server faces some problem, then already instred docuemnts  won't be rollbacked. i.i . Hence automicity bydefault not applicable for bulk inserts.
+
+If we want automicity for bulk inserts then we should go for transctions concepts?
+
+transctions>> Either all or none
+
+e.g: 
+Transfer 10K from, my account to sunny account
+Operation-1: debit 10K from my account
+Operation-2: credit 10k to sunny account
+
+
+
+`````````
+``````````CRUD Operation``````````
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+R - {Read/Retrive/find} Operation
+
+
+
+We can Read document from the collection by using the following find methods:
+1. find({query}): Returns all matched documents based on the query
+2. findOne({query}): Returns one matched docuemnt based on the query
+
+
+The argument query is simple javascript objects.
+These methods are releted to collection and hence we have to call these methods on the collection objects.
+
+db.collection.find()
+db.collection.findOne()
+
+These find methods are similer to select query in relational database
+
+eg:
+read all employees 
+read all employees where esal>10000
+read all employees where eaddr is Hydrabad
+read all employees where eaddr is Hydrabad or esal >10000
+Aggrgate fucntions
+logical operations
+etc
+
+All these things possible in mnogoDB
+
+
+```````````````````
+Books.json:````````````
+``````````````````````````
+
+
+Database name :  Bookstore
+Collection name : books 
+File name : books.json
+
+mongoimport --db Bookstore --collection books --file books.json --jsonArray
+
+Q1. List out all documents present in books collection?
+>> db.books.find().pretty()
+>> db.books.find({}).pretty()
+
+Q2. Find total number of document pesrent in books collection?
+>> db.books.find().count()
+
+Q3. List out first document pesrent in books collection?
+>> db.books.findOne()
+>> db.books.findOne({})
+
+>> pretty()  we can't use for the findOne()
+
+~~~~~~~~~~
+Bookstore> db.books.findOne({}).pretty()
+TypeError: db.books.findOne({}).pretty is not a function
+~~~~~~~~~~~~
+
+>> Even count also we can't use for findOne() method
+
+>> find() always return cursor object 
+
+
+Q4. List out all docuemntfrom the collection where "Title" is NoSQL?
+>> db.books.find({"Title":"NoSQL"})
+
+Q4. List out all docuemntfrom the collection where reviews are 675?
+>> db.books.find({"reviews":675})
+
+
+
