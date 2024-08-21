@@ -1,0 +1,131 @@
+
+`````````Querying the Nested document```````````````````
+
+Database name :  storedb
+Collection name : books
+File name : books1.json
+
+mongoimport --db storedb --collection books --file books1.json --jsonArray
+
+``````````````````````````````````````````````````````````
+
+If the vlue of field is again a document, then that nested property value can be access by using dot operator
+
+Q1. List out all documents where author's callname is Shiv
+>> db.books.find({author.callname:"Shiv"}).pretty() //Invalid
+
+    >> In this case The key must be enclosed within the key.
+    >> db.books.find({"author.callname":"Shiv"}).pretty()
+
+````````
+storedb> db.books.find({"author.callname":"Shiv"}).pretty()
+[
+  {
+    _id: ObjectId("66c49da6b033c154dd47d275"),
+    title: 'Linux in simple way',
+    isbn: 6677,
+    downloadable: false,
+    no_of_reviews: 1,
+    tags: [ 'os', 'freeware', 'shell programming' ],
+    languages: [ 'english', 'hindi', 'telugu' ],
+    author: {
+      name: 'Shiva Ramachandran',
+      callname: 'Shiv',
+      profile: { exp: 8, courses: 3, books: 2 }
+    }
+  }
+]
+`````````
+
+Q2. List out all documents from books collection where author profile contains exactly 3 courses?
+
+>>  db.books.find({"author.profile.courses":4}).pretty()
+
+
+
+`````````````````````````````
+Querying array elements`````````
+
+It is exactly same match
+
+Q1. List out all documents where 'tags' array contains "programming" element?
+
+>>  db.books.find({tags:"programming"}).pretty() ===> Querying array element
+>>  db.books.find({tags:["programming"]}).pretty() ===> Querying array element  ===> Querying array itself
+
+
+Note: 
+> It is somethinf like we are trying to find fruit in a basket not basket but in second case we are trying to find basket itself.
+
+ 
+ Q3. List out all document where 'languages' array contains 'telugu' element?
+
+ >> db.books.find({languages:"telugu"}).pretty()
+
+
+
+ Querying array itself``````````````
+ >>  db.books.find({tags:["programming"]}).pretty() ===> Querying array element  ===> Querying array itself
+
+
+Q1. List out all documents where 'tags' array contains ["web development", "html", "css", "javascript"]
+
+>> db.books.find({tags:["web development", "html", "css", "javascript"]}).pretty()
+
+>> order and case of elements in array is importants
+
+e,g: 
+    >> db.books.find({tags:["web development",  "css", "html", "javascript"]}).pretty()
+
+
+    >> db.books.find({tags: ["web development",  "CSS", "HTML", "JAVASCRIPTS"]}).pretty()
+
+
+```````````````Query operators:?```````````````````
+
+We can use operator in our queries
+Every operator prefixed with $ symbol to indicate that it is operator but not field or value. By seeing $ symbol, MnogoDB server will execute the correponding operator functionality.
+
+1. Comparison Query Operators?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+$eq, $en, $gt, $lt, $gte, $lte, $in, $nin
+
+$eq : Equality
+
+The $eq operator matches documents where the value of the field is equal to specifed value.
+
+syntax: 
+db.collection.find({field: {$eq: value}})
+db.collection.find({field: value}) ==> It is short cut way
+
+Case-1: Equal to a specific value
+Q1. Select all documents from books collection, where no_of_reviews is 3
+
+>  db.books.find({no_of_reviews: {$eq: 15}}).pretty()
+>  db.books.find({no_of_reviews: 15}).pretty()
+
+
+db.books.find({no_of_reviews: 15}).count()
+
+Case-2: Field in nested document equals a value:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Q1. Select all documents from the books collection where author profile contains 7 courses?
+
+> db.books.find({"author.profile.courses": {$eq: 7}})
+> db.books.find({"author.profile.courses": 7})
+
+
+Case-3: Array element equals a value?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Q1. read all documents from the books collection where 'tags' array contains 'database' elements?
+
+> db.books.find({'tags': {$eq: "AI"}})
+> db.books.find({'tags': "AI"})
+
+
+Case-4: Select all documents from books collection where tags array is exactly equal to tags": ["web development","react", "javascript"]
+
+> db.books.find({tags:{$eq: ["web development","react", "javascript"]}}).pretty()
+
