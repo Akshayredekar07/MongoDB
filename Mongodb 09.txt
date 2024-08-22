@@ -1,0 +1,111 @@
+
+$ne operator:
+
+ne  : not equal 
+We can use $ne operator to select all documents where the values of the field is not equal to specified value 
+
+Syntax:  db.collection.find({field: {$ne: value}})
+
+>>  db.books.find({no_of_reviews: {$ne: 28}}).pretty()
+
+>>> If the specified field not avilable, such type of documents also will included in the result.
+
+
+
+$gt  : greater than
+
+We can use $gt operator to select all documents where the value of field is greater than specified value.
+
+Syntax:  db.collection.find({field: {$gt: value}})
+
+Q. Select al documents from the collection where no_of_reviews is greater than 28.
+
+>>  db.books.find({no_of_reviews: {$gt: 28}})
+
+
+
+$gte  : greater than or equal to
+
+We can use $gte operator to select all documents where the value of field is greater than or equal specified value.
+
+Syntax:  db.collection.find({field: {$gte: value}})
+
+Q. Select al documents from the collection where no_of_reviews is greater than 50.
+
+>>  db.books.find({no_of_reviews: {$gte: 50}})
+
+
+
+
+$lt  : less than
+
+We can use $lt operator to select all documents where the value of field is less than or equal specified value.
+
+Syntax:  db.collection.find({field: {$lt: value}})
+
+Q. Select al documents from the collection where no_of_reviews is less than 10.
+
+>>  db.books.find({no_of_reviews: {$lt: 10}})
+
+
+
+$lte  : greater than or equal to
+
+We can use $lte operator to select all documents where the value of field is less than or equal specified value.
+
+Syntax:  db.collection.find({field: {$lte: value}})
+
+Q. Select al documents from the collection where no_of_reviews is less than 3.
+
+>>  db.books.find({no_of_reviews: {$lte: 3}})
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+$in operator:
+
+It is something like python membership operator
+
+We can use $in operator to select all documents where the value of field equal any in the specified array.
+
+Syntax:  db.collection.find({field: {$in: [1, value2, value3,...]}})
+
+Q. Select all documents from the collection where no_of_reviews is 1 or 3 or 5
+>> db.books.find({no_of_reviews: {$in: [1,2,5]}})
+
+
+Q2. Select all documents from the books collection where tags array contains either database or programming
+
+>> db.books.find({tags: {$in: ["python", "programming"]}})
+
+
+
+$nin operator:
+
+$nin  :  not in
+
+We can use $nin operator to select all documents where the value of field not present in the  specified array.
+
+Syntax: db.collection.find({field:{$nin: [value1, value2, value3,...]}})
+
+
+We can use $nin operator to select all documents where:
+1. The field value not present in the specified array.
+2. the field does not exist
+
+Q1. Select all documents from books collection where no_of_reviews is not 1 or 4 or 5?
+
+>> db.books.find({no_of_reviews: {$nin: [1, 4, 5 ,28, 42, 81]}})
+
+Q2. Consider the query?
+
+>> db.books.find({exams: {$nin: [1,4,5]}})
+We will get all documents, because exams filed is not aviable in any document.
+
+Note: $in result + $nin result = total no of documents
+
+
+
+Next: Logical query operators
+
+ $or, $not, $and, $nor
