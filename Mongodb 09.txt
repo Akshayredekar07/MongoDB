@@ -118,4 +118,31 @@ Q2.Select all documents where marks are less than 80 and greater than or equal t
 db.student.find({$and: [{marks:{$lt: 80}}, {marks:{$gte: 76}}]})
 
 
+ShortCut for AND operation:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+MongoDB provide an implicit AND operation when specifiying a comma seperated list of expression
 
+Normal way: {$and: {expression1}, {expression2},...}
+Shortcut:  {expression1, expression2,...}
+e.g
+>>  db.student.find({$and: [{no_of_reviews: {$gte: 3}}, {downloadable: true}]})
+
+>>  db.student.find({no_of_reviews: {$gte: 3}, downloadable: true})
+
+limitation of this shortcut:
+> If the conditions are same fied then this shortcut won't work.
+
+
+Q. list all the students whose marks are>=50 and <=90
+
+>> db.student.find({marks:{$gte:50}, marks:{$lte: 90}})
+
+Reason:
+It javascript object duplicate keys are not allowed. if we are trying to add duplicate keys then old values will be replcaed with new value.
+
+{marks: {$gte: 50}, marks: {$lte: 90}} 
+It will become
+{marks: {$lte: 90}}
+
+Solution: we should use $and operator
+db.student.find({$and: [{no_of_reviews: {$gte: 3}}, {downloadable: true}]})
