@@ -1,0 +1,22 @@
+[
+    {"name": "Anya Patel", "marks": 85},
+    {"name": "Ben Lee", "marks": 92},
+    {"name": "Chen Li", "marks": 78},
+    {"name": "David Johnson", "marks": 95},
+    {"name": "Emily Kim", "marks": 88},
+    {"name": "Frank Rodriguez", "marks": 75},
+    {"name": "Grace Tanaka", "marks": 90},
+    {"name": "Hassan Ali", "marks": 82},
+    {"name": "Ivan Ivanov", "marks": 97},
+    {"name": "Jacob Cohen", "marks": 80},
+    {"name": "Kate Müller", "marks": 93},
+    {"name": "Leo Wang", "marks": 87},
+    {"name": "Maria Rodriguez", "marks": 76},
+    {"name": "Nikhil Gupta", "marks": 91},
+    {"name": "Olivia Chen", "marks": 84},
+    {"name": "Paul Smith", "marks": 96},
+    {"name": "Quinn O'Brien", "marks": 89},
+    {"name": "Riley Kim", "marks": 77},
+    {"name": "Sarah Patel", "marks": 94},
+    {"name": "Thomas Lee", "marks": 83}
+  ]
