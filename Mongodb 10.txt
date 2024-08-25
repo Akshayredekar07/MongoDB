@@ -1,3 +1,67 @@
 $not Operator
 ~~~~~~~~~~~~~
 
+It is jsut to perform inverse operation.
+
+Syntax: {field: {$not: {operator expression}}}
+Syntax: {marks: {$not: {$gte: 10}}}
+
+
+$not operator perfrom Logical NOT opertion on hte specified operator expression and selects the documents thst do not mathc opetor expression.This includes the documents that do not contain the field.
+
+e.g
+C:  {no_of_reviews: {$not: {$gt: 5}}}
+
+db.books.find({no_of_reviews: {$not: {$gte: 3}}}).pretty()
+
+It returns all documents where 
+1. The no_of_reviews not greater tahn 3(i.e less than or equal to 3)
+2. no_of_reviews fields doesn't exist
+
+
+Element Query Operator:
+~~~~~~~~~~~~~~~~~~~~~~~
+1. $exists 
+2. $type
+
+
+1. $exists:
+```````````
+Syntax: {field: {$exists: <boolean>}}
+
+If <boolean> is true, then it selects all documents that contain 
+specified field even the value of field is null.
+
+If <boolean> is false, then it selects all documents that do not contain specified field.
+
+Q1. Select all documents which contains no_of_reviews field.
+
+>> db.books.find({no_of_reviews: {$exists: true}})
+
+Q2. Select all documents which does not contains no_of_reviews field.
+>> db.books.find({no_of_reviews: {$exists: false}})
+
+
+Case Study:
+~~~~~~~~~~~
+
+db.student.insertOne({name: "Durga", marks:100, gf:"Vedika"})
+db.student.insertOne({name: "Ravi", marks:20, gf:"Mallika"})
+
+Q1. Select all student who are having gf field?
+db.student.find({gf: {$exists: true}})
+
+Q2. Select all student who are not having gf field?
+db.student.find({gf: {$exists: false}})
+
+Q3. Select all students who are having the gf, but still marks are greater than 70?
+
+c1: {$gf: {$exists: true}}
+c2: {marks: {$lt: 70}}
+
+
+db.student.find({gf: { $exists: true }, marks: { $gt: 70 }})
+db.student.find({$and : [{gf: { $exists: true }}, {marks: { $gt: 70 }}]})
+
+
+
