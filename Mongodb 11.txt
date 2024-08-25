@@ -1,0 +1,202 @@
+
+Element Query Operator:
+
+part 2 : $type
+
+
+$type operator selects the documents where the value of field is of particular type.
+
+We have to specify the type as BSON type.
+
+This operator is very helpful, whenever we are dealing with large valume of unstructured data where types are unpredictable.
+
+Syntax-1: Querying for a single type
+
+{field: {$type: <BSON>type}}
+
+We can specifly either lias for BSON type.
+e.g:
+
+{field: {$type: "int"}}
+{field: {$type: "string"}}
+
+Syntax-2: Querying for multiple types:
+
+{field: [{$type: <BSON>type1}, {$type: <BSON>type2}, {$type: <BSON>type2} ]}
+
+
+Table:
+BSON Type         | Number | Alias
+------------------|--------|---------
+Double            | 1      | "double"
+String            | 2      | "string"
+Object            | 3      | "object"
+Array             | 4      | "array"
+Binary Data       | 5      | "binData"
+ObjectId          | 7      | "objectId"
+Boolean           | 8      | "bool"
+Date              | 9      | "date"
+Null              | 10     | "null"
+32 Bit Integer    | 16     | "int"
+64 Bit Integer    | 18     | "long"
+Decimal128        | 19     | "decimal"
+
+
+
+Q1. What is the difference between the int and long?
+int --> 32 bits
+long --> 64 bits
+
+Q2. What is the difference between double and decimal?
+double  ---> 64 bit floating point value
+decimal  ---> 128 bit floating point value
+
+
+Note: $type supports "number" Alias, which wil mathc the following BSON Types.
+int
+long
+double
+decimal
+
+
+Case Study:
+```````````
+
+db.phonebook.insertOne({_id: 1, name: "Durga", phoneNumber: "9392297878"})
+db.phonebook.insertOne({_id: 2, name: "Bunny", phoneNumber: 9392297979})
+db.phonebook.insertOne({_id: 3, name: "Chinny", phoneNumber: NumberLong(9898989898)})
+db.phonebook.insertOne({_id: 4, name: "Vinny", phoneNumber: NumberInt(9191919191)})
+db.phonebook.insertOne({_id: 5, name: "Pinny", phoneNumber: ["7474747474", 7171717171]})
+
+Every number is bydefault treated as double type in MongoDB.
+
+
+"9392299090" -- String
+9392299097 -- double
+
+If i want to consider the as long type or any toher type:
+
+NumberLong(9898989898)
+NumberInt(9898989898)
+
+~~~~~~~~
+Warning: NumberLong: specifying a number as argument is deprecated and may lead to loss of precision, pass a string instead
+solution:::
+Always pass large integer values as strings to NumberLong to prevent precision loss.
+~~~~~~~~~
+
+NumberLong(9898989898) 
+use instead:>>> NumberLong("9898989898")
+
+>> show collections
+
+````````
+db.phonebook.find().pretty()
+[
+  { _id: 1, name: 'Durga', phoneNumber: '9392297878' },
+  { _id: 2, name: 'Bunny', phoneNumber: 9392297979 },
+  { _id: 3, name: 'Chinny', phoneNumber: Long("9898989898") },
+  { _id: 4, name: 'Vinny', phoneNumber: 601984599 },
+  { _id: 5, name: 'Pinny', phoneNumber: [ '7474747474', 7171717171 ] }
+]
+
+```````
+
+
+"9392299090" ---------------> String type
+9392299097 -----------------> Double type
+NumberLong(9898989898) -----> Long type
+NumberInt(9898989898) ------> Int type
+
+
+Q1. Select all documents where phoneNumber value is of string type?
+
+use Table:: for Alias
+
+>> db.phonebook.find({phoneNumber: {$type: "string"}})
+>> db.phonebook.find({phoneNumber: {$type: 2}})
+
+````
+storedb> db.phonebook.find({phoneNumber: {$type: "string"}})
+[
+  { _id: 1, name: 'Durga', phoneNumber: '9392297878' },
+  { _id: 5, name: 'Pinny', phoneNumber: [ '7474747474', 7171717171 ] }
+]
+`````````
+
+storedb> db.phonebook.find({phoneNumber: {$type: 2}})
+[
+  { _id: 1, name: 'Durga', phoneNumber: '9392297878' },
+  { _id: 5, name: 'Pinny', phoneNumber: [ '7474747474', 7171717171 ] }
+]
+````````
+
+Q2. selects all documents where all phoneNumber of double type
+
+db.phonebook.find({phoneNumber: {$type: "double"}})
+db.phonebook.find({phoneNumber: {$type: 1}})
+
+``````
+storedb> db.phonebook.find({phoneNumber: {$type: "double"}})
+[
+  { _id: 2, name: 'Bunny', phoneNumber: 9392297979 },
+  { _id: 5, name: 'Pinny', phoneNumber: [ '7474747474', 7171717171 ] }
+]
+````
+
+
+Q3. selects all documents where all phoneNumber of int type
+
+db.phonebook.find({phoneNumber: {$type: "int"}})
+db.phonebook.find({phoneNumber: {$type: 16}})
+
+`````
+storedb> db.phonebook.find({phoneNumber: {$type: "int"}})
+[ { _id: 4, name: 'Vinny', phoneNumber: 601984599 } ]
+```````
+storedb> db.phonebook.find({phoneNumber: {$type: 16}})
+[ { _id: 4, name: 'Vinny', phoneNumber: 601984599 } ]
+storedb>
+
+
+
+Q4. selects all documents where all phoneNumber of long type
+
+db.phonebook.find({phoneNumber: {$type: "long"}})
+db.phonebook.find({phoneNumber: {$type: 18}})
+
+~~~Check the value is of number type or not~~~~
+db.phonebook.find({phoneNumber: {$type: "number"}})
+
+````
+storedb> db.phonebook.find({phoneNumber: {$type: "number"}})
+[
+  { _id: 2, name: 'Bunny', phoneNumber: 9392297979 },
+  { _id: 3, name: 'Chinny', phoneNumber: Long("9898989898") },
+  { _id: 4, name: 'Vinny', phoneNumber: 601984599 },
+  { _id: 5, name: 'Pinny', phoneNumber: [ '7474747474', 7171717171 ] }
+]
+```
+
+
+insert:
+
+db.phonebook.insertOne({_id: 6, name: "Sunny", phoneNumber: NumberInt(10)})
+db.phonebook.insertOne({_id: 7, name: "Minny", phoneNumber: NumberInt(9999999999)})
+
+>> Why this converion happens: 9999999999 for this 32 bit number is not enough ,, but forcely we have to told MongoDB to store in int hence it automatically rounding off happens
+
+output:: { _id: 7, name: 'Minny', phoneNumber: 1410065407 }
+
+Hence use NumberLong instead of NumberInt:
+
+note: NumberInt(9999999999) --> 1410065407
+9999999999 cannot accomdated in 32 bits. hence some loss of infromation
+
+Q6. Querying the multiple datatypes?
+
+Q. Select all documents where phoneNumber value is of string or double.
+
+> db.phonebook.find({phoneNumber: {$type:[2,1]}}).pretty()
+
+

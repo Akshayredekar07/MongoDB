@@ -63,5 +63,3 @@ c2: {marks: {$lt: 70}}
 db.student.find({gf: { $exists: true }, marks: { $gt: 70 }})
 db.student.find({$and : [{gf: { $exists: true }}, {marks: { $gt: 70 }}]})
 
-
-
