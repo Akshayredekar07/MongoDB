@@ -1,0 +1,161 @@
+
+
+$mod operator:
+
+Modulo operator or reminder operator %.
+
+It is very helpful to select documents boased on modulo operation   
+
+It can use $mod operator to select documents where the values of the fields divided by a divisor has a specific reminder.
+
+Syntax: {field: {$mod : [divisor, reminder]}}
+
+Case Study:
+```````````
+
+db.shop.insertOne({_id:1, item: "soaps", quantity: 13})
+db.shop.insertOne({_id:2, item: "books", quantity: 10})
+db.shop.insertOne({_id:3, item: "pens", quantity: 15})
+db.shop.insertOne({_id:4, item: "pencils", quantity: 17})
+db.shop.insertOne({_id:5, item: "sharpner", quantity: 20})
+
+
+Q1. Select all documents of shop collection where quantity value is divisible by 5?
+
+
+db.shop.find({quantity: {$mod: [5, 0]}})
+~~
+storedb> db.shop.find({quantity: {$mod: [5, 0]}})
+[
+  { _id: 2, item: 'books', quantity: 10 },
+  { _id: 3, item: 'pens', quantity: 15 },
+  { _id: 5, item: 'sharpner', quantity: 20 }
+]
+~~~
+
+Q2. Select all documents of  the shop collection where quantity values is divisible by 4 and has reminder1.
+
+db.shop.find({quantity: {$mod: [4, 1]}})
+`````
+storedb> db.shop.find({quantity: {$mod: [4, 1]}})
+[
+  { _id: 1, item: 'soaps', quantity: 13 },
+  { _id: 4, item: 'pencils', quantity: 17 }
+]
+``````
+
+Note: compulsory we have to provide both divisor and reminder, otherwise we will get error?
+>> eg1: 
+storedb> db.shop.find({quantity: {$mod: [4, 1, 2]}})
+MongoServerError: malformed mod, too many elements
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+4. $jsonSchema:
+We can use this operator document based on given jsonSchema
+
+
+5. $text
+~~~~~~~~
+It is releted to index concepts
+
+
+6. $where
+~~~~~~~~
+It is depricated and replicated $epxr
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Array Quary Operator:
+~~~~~~~~~~~~~~~~~~~~~
+
+1. $all 2. $elemMatch  3.$size
+
+1. $all operator:
+
+We can use $all operator ot select documents where array contains all specifed elements.
+
+
+Syntax:
+{field: {$all: [value1, value2, value3,...]}}
+
+We can write equvialent query by using #and operator also.
+{$and: [{field: value1}, {field: value2},...]}
+
+Case Study:
+~~~~~~~~~~~
+
+db.courses.insertOne({_id:1, name:"java", tags:["language", "programming", "easy", "ocen"]})
+db.courses.insertOne({_id:2, name:"python", tags:["language", "programming", "easy"]})
+db.courses.insertOne({_id:3, name:"C", tags:["language", "performance"]})
+db.courses.insertOne({_id:4, name:"Oracle", tags:["database", "sql", "cloud"]})
+db.courses.insertOne({_id:5, name:"Devops", tags:["Culture"]})
+db.courses.insertOne({_id:6, name:"MongoDB", tags:["database", "nosql", "cloud"]})
+
+Q1. Select all documents where tags contains "database" and "cloud" elements?
+1.
+>> db.courses.find({tags: {$all:  ["database", "cloud"]}})
+
+2. Using $and operator:
+>> db.courses.find({$and: [{tags: "database"}, {tags: "cloud"}]})
+Order of elements is not important and it is no exact match
+
+3. db.courses.find({tags: ["database", "cloud"]})
+---Here order is important and exact match
+
+
+Q2. Select all documents where tags array contains "language" and "programming" elements?
+
+>> db.courses.find({$and: [{tags: "language"}, {tags:"programming"}]})
+
+>> db.courses.find({tags: {$all:  ["language", "programming"]}})
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+2. $elemMatch means elements Match.
+
+Alteast one element in your array satisfy all my documents
+
+We can you $elemMatch operator to select document where atleast one element of the array mathcs the specifed query criterta.
+
+Syntax;
+{field: {$elemMatch: {<query1>, <query2>, <query3>,...}}}
+
+Case Study:
+~~~~~~~~~~~
+
+db.students1.insertOne({_id:1, name: "durga", marks:[82,35,99]})
+db.students1.insertOne({_id:2, name: "Ravi", marks:[70, 90, 95]})
+
+Q1. Select documents where students1 has atleast one subject marks greater than or equal to 80 but less than 90?
+
+>> db.students1.find({marks: {$elemMatch: {$gte: 80, $lt:90}}})
+
+output: 
+82 is greater tahn or equal to 80 but less than 90
+
+
+
+3. $size operator:
+~~~~~~~~~~~~~~~~~~
+
+We can use $size operator to select document based on specifed array size?
+
+Syntax:
+{field: {$size: n}}
+
+e,g: courses example
+
+Q1. Select all documents where tags array contains exactly 4 elements?
+>> db.courses.find({tags: {$size: 4}})
+
+Q2. exactly 3 element?
+db.courses.find({tags: {$size: 3}})
+
+
+Q3. Only one element?
+
+
+Note: $size does does not accespt range of values.
+
