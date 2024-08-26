@@ -1,0 +1,154 @@
+
+
+Comparsion Operators: $gt, $gte, $lt, $lte, $eq, $ne, $in , $nin
+Logical Operators: $or, $nor, $and, $not 
+Element query operators: $exists, $type
+
+Evaluation Query operator:
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The operator which can be used for evaluation purpose are called Evaluation Query Operator.
+
+1. $expr
+2. $regex  
+3. $mod  
+4. $jsonSchema
+5. $text
+6. $where
+
+Example:
+collection: homeBudget
+
+db.homeBudget.insertOne({category: "Home food", budget:1000, spent:1500})
+db.homeBudget.insertOne({category: "Outside food", budget:1000, spent:2000})
+db.homeBudget.insertOne({category: "Rent", budget:1500, spent:1500})
+db.homeBudget.insertOne({category: "Education", budget:2000, spent:1000})
+db.homeBudget.insertOne({category: "Clothes", budget:750, spent:1500})
+db.homeBudget.insertOne({category: "Entertainment", budget:1000, spent:2500})
+db.homeBudget.insertOne({category: "electronics", budget:400, spent:700})
+
+Q1. Select all documents where budget value is 1000?
+db.homeBudget.find({budget: 1000})
+
+Q2. Select all documents where category value is Rent?
+db.homeBudget.find({category: "Rent"})
+
+Q3. Select all documents where spent amount exceeds budget amount?
+Condition: 
+db.homeBudget.find({spent: {$gt: budget}}) //wrong
+
+In same colletion if you want to comapere to values then go for $expr.
+
+
+
+$exper:
+```````
+It is very helpful to compare two fields values within the same document.
+
+Syntax:
+{$expr: {<expression>}}
+
+Q1. Select all documents where spent amount exceeds budget amount?
+
+db.homeBudget.find({$expr: {$gt: ["$spent", "$budget"]}}).pretty()
+
+Q2. Select all documents where spent amount is less than or equal to budget amount?
+db.homeBudget.find({$expr: {$lte: ["$spent", "$budget"]}}).pretty()
+
+
+Q2. Select all documents where spent amount equal to budget amount?
+db.homeBudget.find({$expr: {$eq: ["$spent", "$budget"]}}).pretty()
+
+
+Note: 
+`````
+$expr opertor is very commonly used with aggregation expression
+
+exper ----> means expression
+Evaluate the expression and select document which satisfy that expression
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+$regex : 
+We can use $reges operator to select document where value match a specified regular expression
+
+Syntax:
+We can use $regex operator in any of the following styles:
+
+{field: {$regex: /pattern/, $options: '<options>'}}
+{field: {$regex: 'pattern', $options: '<options>'}}
+{field: {$regex: /pattern/<options>}}
+{field: /pattern/<options>}
+
+
+$regex means regular expression.
+
+Q. Select the document where category is Rent?
+db.homeBudget.find({category: "Rent"})
+
+Select all documents where value contains "Home food"?
+db.homeBudget.find({category: "Home food"})
+
+Q1.Select all documents where category value contains food?
+>> 
+{field: {$regex: /pattern/, $options: '<options>'}}
+{field: {$regex: 'pattern', $options: '<options>'}}
+{field: {$regex: /pattern/<options>}}
+{field: /pattern/<options>}
+e.g
+db.homeBudget.find({category: {$regex: /food/}})
+db.homeBudget.find({category: {$regex: 'food'}})
+db.homeBudget.find({category: /food/})
+
+It is something like '%xxx' or 'xxx%' or '%xxx%' in relational database?
+
+
+Q2. Select all document where category value starts with E?
+
+Note: ^
+We can use ^ symbol in regular expressions to indicate starts with.
+db.homeBudget.find({category: {$regex: /^E/}})
+db.homeBudget.find({category: {$regex: '^E'}})
+db.homeBudget.find({category: /^E/})
+
+Q3. Select all document where category value starts with either E or C?
+
+Note: 
+[abc] -->either a or b or c
+[ec] --->either e or c
+^[ec] --->starts with either e or c
+
+db.homeBudget.find({category: {$regex: /^[EC]/}})
+db.homeBudget.find({category: {$regex: '^[EC]'}})
+db.homeBudget.find({category: /^[EC]/})
+
+Q4. Select all document where category value ends with t?
+^t ---> starts with t
+t$ ---> ends with t
+db.homeBudget.find({category: {$regex: /t$/}})
+db.homeBudget.find({category: {$regex: 't$'}})
+db.homeBudget.find({category: /t$/})
+
+Q4. Select all document where category value ends with either t or n?
+^t ---> starts with t
+t$ ---> ends with t
+db.homeBudget.find({category: {$regex: /[tn]$/}})
+db.homeBudget.find({category: {$regex: '[tn]$'}})
+db.homeBudget.find({category: /[tn]$/})
+
+
+How to Check the case Insensitivitiy?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Bydefault case will be considered. If we ant to ignore case, i.e if we want case Insensitivitiy then we should go use 'i' option
+
+i means case insensitive
+
+Q2. Select all document where category value starts with either e or E?
+
+db.homeBudget.find({category: {$regex : /^E/, $options: 'i' }})
+db.homeBudget.find({category: {$regex : '^E', $options: 'i' }})
+db.homeBudget.find({category: {$regex : /^E/i}})
+db.homeBudget.find({category: /^E/i})
+
+
+$mod operator: next part
