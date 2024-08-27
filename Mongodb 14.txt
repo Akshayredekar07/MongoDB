@@ -17,3 +17,192 @@ db.getCollection('emp.').renameCollection('emp')
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+find method returns objects
+
+>> it returns the cursor object
+
+
+The Complete Story of Cursor concept: ------------------------------------ 
+Diagram  
+
+In a collection there may be a chance of lakhs of documents. 
+Whenever we are trying to retrieve data from database, if MongoDB server sends total data, there may be a chance of the following
+
+problems:   
+1. Storage problems 
+2. Network traffic problem 
+3. Performance problems  etc 
+
+To prevent these problems, most of the databases including MongoDB, uses cursor concept. 
+
+In MongoDB, if we are using find() method we won't get documents 
+and we will get cursor object.  
+
+The return type of find() method is cursor object. By using cursor object we can get data either batch wise or document 
+wise. 
+
+Bydefault cursor object will provide documents in batch wise. The default batch size is 20. But we can customize this value. For this we have to use 
+
+config.set("displayBatchSize", 5) property.
+
+
+~~~~~~~~~~~~~~~~~
+storedb> db.learners.find()
+[
+  { _id: 6, name: 'Dhanaraju', marks: 60 },
+  { _id: 13, name: 'Pranav', marks: 30 },
+  { _id: 14, name: 'Meera', marks: 40 },
+  { _id: 15, name: 'Vinay', marks: 50 },
+  { _id: 16, name: 'Sarika', marks: 60 },
+  { _id: 12, name: 'Ravi Kumar', marks: 20 },
+  { _id: 17, name: 'Gautam', marks: 70 },
+  { _id: 18, name: 'Nisha', marks: 80 },
+  { _id: 19, name: 'Anand', marks: 90 },
+  { _id: 20, name: 'Lakshmi', marks: 100 },
+  { _id: 21, name: 'Vikas', marks: 10 },
+  { _id: 22, name: 'Ragini', marks: 20 },
+  { _id: 23, name: 'Harsh', marks: 30 },
+  { _id: 24, name: 'Anita', marks: 40 },
+  { _id: 9, name: 'Kavya', marks: 90 },
+  { _id: 25, name: 'Manoj', marks: 50 },
+  { _id: 10, name: 'Aryan', marks: 100 },
+  { _id: 8, name: 'Jyothi', marks: 80 },
+  { _id: 11, name: 'Shruti', marks: 10 },
+  { _id: 5, name: 'Sheshanand Singh', marks: 50 }
+]
+
+~~~~~~~~~~~~~~~~~
+
+>> config.set("displayBatchSize", 5)
+
+>> config.set("displayBatchSize", 20)
+
+Advantages of cursor:
+~~~~~~~~~~~~~~~~~~~~~
+1. We can get only required number od documents.
+2. We can get either batch wise or document wise.
+3. No chance of Storage peoblem.
+4. no chance of Network traffic problem
+5. No chance of Performance issues.
+
+
+Important methods of cursors:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. count()    
+To get total number of documents  
+
+2. hasNext()    
+To check whether the next document is available or not.
+If it avaialble then it returns true, otherwise returns false.  
+
+3. next() 
+To get next document. If there is no next document then we will get error. 
+
+Q. Why we are getting same document in the following case?
+
+storedb> db.learners.find().next()
+{ _id: 6, name: 'Dhanaraju', marks: 60 }
+storedb> db.learners.find().next()
+{ _id: 6, name: 'Dhanaraju', marks: 60 }
+
+Ans: Here two different cursor objects we are using.
+
+
+Javascript based code to get documents one by one: -------------------------------------------------- 
+var mycursor = db.learners.find()
+mycursor.next()
+mycursor.next()
+
+In this case we are using same cursor object and hence different 
+documents we will get.
+
+storedb> var mycursor = db.learners.find()
+storedb> mycursor.next()
+{ _id: 6, name: 'Dhanaraju', marks: 60 }
+storedb> mycursor.next()
+{ _id: 13, name: 'Pranav', marks: 30 }
+storedb>
+
+mycursor.hasNext()
+
+
+eg-1: 
+> var mycursor = db.emp.find() 
+> mycursor.hasNext() 
+true 
+storedb> mycursor.next()
+{ _id: 18, name: 'Nisha', marks: 80 }
+storedb> mycursor.next()
+{ _id: 19, name: 'Anand', marks: 90 }
+storedb> mycursor.next()
+{ _id: 20, name: 'Lakshmi', marks: 100 }
+storedb> mycursor.next()
+{ _id: 21, name: 'Vikas', marks: 10 }
+
+
+
+::::::::::::::::::::::::not working in new versions::::::::::::::
+eg-2:  
+var mycursor = db.learners.find(); 
+while( mycursor.hasNext() ) 
+{    print(tojson(mycursor.next())); 
+}  
+
+on shell: 
+var mycursor = db.learners.find(); 
+while( mycursor.hasNext() ) { print(tojson(mycursor.next()));}   
+
+
+````````````````````````````````````````````````````````````
+storedb> while( mycursor.hasNext() ) { print(tojson(mycursor.next()));}
+ReferenceError: tojson is not defined (Are you trying to run a script written for the legacy shell? Try running `snippet install mongocompat`)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+snippet install mongocompat
+    
+::::::::::::::::::::::::
+
+use In the new shell (mongosh), the method to convert an object to a JSON string is simply JSON.stringify().
+
+:::::::::
+while (mycursor.hasNext()) { 
+    print(JSON.stringify(mycursor.next()));
+}
+
+       
+Note: mycursor.next() returns BSON object. We have to convert BSON Object to json by using tojson() method. 
+
+
+Note: mycursor.next() returns BSON object. we have to convert BSON object to json object by using JSON.stringify()
+
+
+Example 3: Using while Loop and printjson()
+
+var mycursor = db.learners.find();
+while (mycursor.hasNext()) { 
+    printjson(mycursor.next());
+}
+
+
+```````````````````````````````````````````
+Example 4: Using forEach with an Arrow Function
+
+var mycursor = db.learners.find();
+mycursor.forEach(doc => { 
+    printjson(doc); 
+});
+
+
+Example 5: Using forEach with printjson as a Callback
+`````
+var mycursor = db.learners.find();
+mycursor.forEach(printjson);
+
+
+Cursor Helper methods:
+
+1. limit()
+2. skip()
+3. sort()
+
+
