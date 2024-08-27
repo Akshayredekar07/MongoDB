@@ -1,0 +1,19 @@
+How to import data from csv file to MongoDB?
+
+vidya.csv
+
+command:
+
+mongoimport -d storedb -c emp --type csv --headerline --drop test.csv
+
+e.g:
+~~~~
+learner.csv
+
+mongoimport -d storedb -c learners --type csv --headerline --drop learners.csv
+
+
+db.getCollection('emp.').renameCollection('emp')
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
