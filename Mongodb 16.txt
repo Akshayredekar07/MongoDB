@@ -1,0 +1,322 @@
+
+How to get documents with only required fields: ----------------------------------------------- 
+We can get documents with only required fields instead of all fields. 
+This is called projection.
+
+Relational databases/sql dabases: 
+--------------------------------- 
+
+without projection: select * from employees; 
+with projection: select ename,esal from employees;   
+
+Projection in MongoDB? 
+---------------------- 
+db.collection.find({filter}) ===>without projection 
+db.collection.find({filter},{projection fields})===>with projection  
+
+Note: 
+If we are providing projection list, compulsory we should provide 
+filter object also, atleast empty java script object. i.e without providing first argument, we cannot talk about second argument.  
+
+eg: db.collection.find({},{projection fields})
+
+Case Study: 
+---------- 
+books collection: sample document
+
+[
+  {
+    _id: ObjectId("66c49da6b033c154dd47d271"),
+    title: 'Web Development Essentials',
+    isbn: 8910,
+    downloadable: true,
+    no_of_reviews: 40,
+    tags: [ 'web development', 'html', 'css', 'javascript' ],
+    languages: [ 'english', 'german', 'mandarin' ],
+    author: {
+      name: 'Sara Lee',
+      callname: 'Sara',
+      profile: { exp: 7, courses: 4, books: 2 }
+    }
+  }
+]
+
+
+Syntax:
+db.collection.find({},{projection fields})
+
+Q1. Wrtie the query to project only title and no_of_reviews? 
+> db.books.find({}, {title:1, no_of_reviews:1}).pretty()
+
+storedb> db.books.find({}, {title:1, no_of_reviews:1}).limit(4)
+[
+  {
+    _id: ObjectId("66c49da6b033c154dd47d271"),
+    title: 'Web Development Essentials',
+    no_of_reviews: 40
+  },
+  {
+    _id: ObjectId("66c49da6b033c154dd47d272"),
+    title: 'Data Science with R',
+    no_of_reviews: 15
+  },
+  {
+    _id: ObjectId("66c49da6b033c154dd47d273"),
+    title: 'Introduction to Machine Learning',
+    no_of_reviews: 50
+  },
+  {
+    _id: ObjectId("66c49da6b033c154dd47d274"),
+    title: 'Mastering Python',
+    no_of_reviews: 25
+  }
+]
+
+
+
+field: 1 ===>means project/include this field in the result 
+field: 0 ===>means not to project/exclude this field in the result 
+
+If we are not taking any field in the projected list, bydefault that field will be excluded. ie default value is 0.  
+
+_id field will be included always. But we can exclude this field by 
+assigning with 0 explicitly.
+
+Note: 
+> db.books.find({},{}).pretty()   
+We will get all documents with all fields. 
+Simply it is equals to: > db.books.find().pretty()
+
+
+Q2. To project only title and no_of_reviews without _id ? 
+> db.books.find({},{title: 1,no_of_reviews: 1, _id: 0}).pretty()
+
+storedb> db.books.find({},{title: 1,no_of_reviews: 1, _id: 0}).pretty()
+[
+  { title: 'Web Development Essentials', no_of_reviews: 40 },
+  { title: 'Data Science with R', no_of_reviews: 15 },
+  { title: 'Introduction to Machine Learning', no_of_reviews: 50 },
+  { title: 'Mastering Python', no_of_reviews: 25 },
+  { title: 'Linux in simple way', no_of_reviews: 1 },
+  { title: 'Natural Language Processing', no_of_reviews: 28 },
+  { title: 'Linux in simple way', no_of_reviews: 1 },
+  { title: 'Data Science with R', no_of_reviews: 15 },
+  { title: 'Introduction to Machine Learning', no_of_reviews: 50 },
+  { title: 'Computer Vision Basics', no_of_reviews: 38 },
+  { title: 'Deep Learning Concepts', no_of_reviews: 42 },
+  { title: 'Mastering Python', no_of_reviews: 25 },
+  { title: 'Web Development Essentials', no_of_reviews: 40 },
+  { title: 'Linux in simple way', no_of_reviews: 1 },
+  { title: 'Introduction to Cybersecurity', no_of_reviews: 70 },
+  { title: 'Data Science with R', no_of_reviews: 15 },
+  { title: 'Introduction to Machine Learning', no_of_reviews: 50 },
+  { title: 'Introduction to Python Programming', no_of_reviews: 90 },
+  { title: 'Mastering Python', no_of_reviews: 25 },
+  { title: 'Deep Learning Concepts', no_of_reviews: 42 }
+]
+
+````````
+Q3. Select all documents where no_of_reviews is greater than or equal to 3. Project only the following fields in every document? 
+1. title 
+2. no_of_reviews 
+3. isbn 
+
+> db.books.find({ no_of_reviews: {$gte: 3}}, {title: 1, no_of_reviews:1, isbn:1, _id: 0 }).pretty()
+
+
+~~~~~~~~
+toredb> db.books.find({ no_of_reviews: {$gte: 3}}, {title: 1, no_of_reviews:1, 
+... isbn:1, _id: 0 }).pretty();                                                                                                                                    
+[
+  {
+    title: 'Web Development Essentials',
+    isbn: 8910,
+    no_of_reviews: 40
+  },
+  { title: 'Data Science with R', isbn: 3456, no_of_reviews: 15 },
+  {
+    title: 'Introduction to Machine Learning',
+    isbn: 7890,
+    no_of_reviews: 50
+  },
+  { title: 'Mastering Python', isbn: 1234, no_of_reviews: 25 },
+  {
+    title: 'Natural Language Processing',
+    isbn: 1234,
+    no_of_reviews: 28
+  },
+  { title: 'Data Science with R', isbn: 3456, no_of_reviews: 15 },
+  {
+    title: 'Introduction to Machine Learning',
+    isbn: 7890,
+    no_of_reviews: 50
+  },
+  { title: 'Computer Vision Basics', isbn: 5678, no_of_reviews: 38 },
+  { title: 'Deep Learning Concepts', isbn: 9876, no_of_reviews: 42 },
+  { title: 'Mastering Python', isbn: 1234, no_of_reviews: 25 },
+  {
+    title: 'Web Development Essentials',
+    isbn: 8910,
+    no_of_reviews: 40
+  },
+  {
+    title: 'Introduction to Cybersecurity',
+    isbn: 7654,
+    no_of_reviews: 70
+  },
+  { title: 'Data Science with R', isbn: 3456, no_of_reviews: 15 },
+  {
+    title: 'Introduction to Machine Learning',
+    isbn: 7890,
+    no_of_reviews: 50
+  },
+  {
+    title: 'Introduction to Python Programming',
+    isbn: 2468,
+    no_of_reviews: 90
+  },
+  { title: 'Mastering Python', isbn: 1234, no_of_reviews: 25 },
+  { title: 'Deep Learning Concepts', isbn: 9876, no_of_reviews: 42 },
+  {
+    title: 'Natural Language Processing',
+    isbn: 1234,
+    no_of_reviews: 28
+  },
+  {
+    title: 'Web Development Essentials',
+    isbn: 8910,
+    no_of_reviews: 40
+  },
+  {
+    title: 'Data Structures and Algorithms in Java',
+    isbn: 1357,
+    no_of_reviews: 75
+  }
+]
+~~~~~~~~~~~~~~~~~
+
+Projection of Nested Document Fields: ------------------------------------- 
+
+Q4. Project title, author's name and number of books in every 
+document?
+
+> db.books.find({},{title: 1, "author.name": 1, "author.profile.books":1, _id:0 }).pretty()
+
+
+
+Projection of Array Elements | Array Elements Projection Operators: ------------------------------------------------------------------- > db.books.find({tags:"programming"}).pretty() 
+> db.books.find({tags:"programming"},{title:1, tags:1, _id:0}).pretty() 
+> db.books.find({tags:"programming"},{title:1, "tags.$":1, _id:0}).pretty()
+
+```````
+storedb> db.books.find({tags:"programming"}).pretty()
+[
+  {
+    _id: ObjectId("66c49da6b033c154dd47d274"),
+    title: 'Mastering Python',
+    isbn: 1234,
+    downloadable: true,
+    no_of_reviews: 25,
+    tags: [ 'python', 'programming', 'scripting' ],
+    languages: [ 'english', 'spanish', 'french' ],
+    author: {
+      name: 'Amit Desai',
+      callname: 'Amit',
+      profile: { exp: 10, courses: 5, books: 3 }
+    }
+  },
+  {
+    _id: ObjectId("66c54efc38dcd8bfb36c1f1b"),
+    title: 'Mastering Python',
+    isbn: 1234,
+    downloadable: true,
+    no_of_reviews: 25,
+    tags: [ 'python', 'programming', 'scripting' ],
+    languages: [ 'english', 'spanish', 'french' ],
+    author: {
+      name: 'Amit Desai',
+      callname: 'Amit',
+      profile: { exp: 10, courses: 5, books: 3 }
+    }
+  },
+  {
+    _id: ObjectId("66c54fd82e8e5e4217c7901a"),
+    title: 'Introduction to Python Programming',
+    isbn: 2468,
+    downloadable: true,
+    no_of_reviews: 90,
+    tags: [ 'python', 'programming', 'beginner' ],
+    languages: [ 'english', 'spanish', 'french' ],
+    author: {
+      name: 'Liam Patel',
+      callname: 'Liam',
+      profile: { exp: 7, courses: 4, books: 2 }
+    }
+  },
+  {
+    _id: ObjectId("66c54fd82e8e5e4217c7901b"),
+    title: 'Mastering Python',
+    isbn: 1234,
+    downloadable: true,
+    no_of_reviews: 25,
+    tags: [ 'python', 'programming', 'scripting' ],
+    languages: [ 'english', 'spanish', 'french' ],
+    author: {
+      name: 'Amit Desai',
+      callname: 'Amit',
+      profile: { exp: 10, courses: 5, books: 3 }
+    }
+  },
+  {
+    _id: ObjectId("66c54fd82e8e5e4217c79021"),
+    title: 'Mastering C++ Programming',
+    isbn: 4321,
+    downloadable: true,
+    no_of_reviews: 80,
+    tags: [ 'c++', 'programming', 'intermediate' ],
+    languages: [ 'english', 'russian', 'portuguese' ],
+    author: {
+      name: 'Katerina Ivanova',
+      callname: 'Katerina',
+      profile: { exp: 12, courses: 7, books: 4 }
+    }
+  }
+]
+storedb> db.books.find({tags:"programming"},{title:1, tags:1, _id:0}).pretty()
+[
+  {
+    title: 'Mastering Python',
+    tags: [ 'python', 'programming', 'scripting' ]
+  },
+  {
+    title: 'Mastering Python',
+    tags: [ 'python', 'programming', 'scripting' ]
+  },
+  {
+    title: 'Introduction to Python Programming',
+    tags: [ 'python', 'programming', 'beginner' ]
+  },
+  {
+    title: 'Mastering Python',
+    tags: [ 'python', 'programming', 'scripting' ]
+  },
+  {
+    title: 'Mastering C++ Programming',
+    tags: [ 'c++', 'programming', 'intermediate' ]
+  }
+]
+storedb> db.books.find({tags:"programming"},{title:1, "tags.$":1, _id:0}).pretty()
+[
+  { title: 'Mastering Python', tags: [ 'programming' ] },
+  { title: 'Mastering Python', tags: [ 'programming' ] },
+  {
+    title: 'Introduction to Python Programming',
+    tags: [ 'programming' ]
+  },
+  { title: 'Mastering Python', tags: [ 'programming' ] },
+  { title: 'Mastering C++ Programming', tags: [ 'programming' ] }
+]
+`````
+
+
+
