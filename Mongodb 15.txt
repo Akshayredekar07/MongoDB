@@ -1,0 +1,132 @@
+
+Cursor Helper methods:
+~~~~~~~~~~~~~~~~~~~~~~
+
+1. limit():
+
+we can use limit() method to limit the number of documents in the result.
+
+> db.learners.find().limit(1);
+
+> db.learners.find().limit(2);
+
+storedb> db.learners.find().limit(1);
+[ { _id: 6, name: 'Dhanaraju', marks: 60 } ]
+storedb> db.learners.find().limit(2)
+[
+  { _id: 6, name: 'Dhanaraju', marks: 60 },
+  { _id: 13, name: 'Pranav', marks: 30 }
+]
+storedb> db.learners.find().limit(5)
+[
+  { _id: 6, name: 'Dhanaraju', marks: 60 },
+  { _id: 13, name: 'Pranav', marks: 30 },
+  { _id: 14, name: 'Meera', marks: 40 },
+  { _id: 15, name: 'Vinay', marks: 50 },
+  { _id: 16, name: 'Sarika', marks: 60 }
+]
+storedb> db.learners.find().limit(15)
+[
+  { _id: 6, name: 'Dhanaraju', marks: 60 },
+  { _id: 13, name: 'Pranav', marks: 30 },
+  { _id: 14, name: 'Meera', marks: 40 },
+  { _id: 15, name: 'Vinay', marks: 50 },
+  { _id: 16, name: 'Sarika', marks: 60 },
+  { _id: 12, name: 'Ravi Kumar', marks: 20 },
+  { _id: 17, name: 'Gautam', marks: 70 },
+  { _id: 18, name: 'Nisha', marks: 80 },
+  { _id: 19, name: 'Anand', marks: 90 },
+  { _id: 20, name: 'Lakshmi', marks: 100 },
+  { _id: 21, name: 'Vikas', marks: 10 },
+  { _id: 22, name: 'Ragini', marks: 20 },
+  { _id: 23, name: 'Harsh', marks: 30 },
+  { _id: 24, name: 'Anita', marks: 40 },
+  { _id: 9, name: 'Kavya', marks: 90 }
+]
+
+
+
+2. skip():
+~~~~~~~~~~
+
+We can use skip() method to skip the number of documents in  the result.
+
+> db.learners.find().skip(3);
+to skip the  first 10 documents
+
+Q. To skip 10 documents and display next 10 documents?
+>db.learners.find().skip(10).limit(10);
+
+Use Case: 
+---------
+ In general we can use skip() and limit() methods in pagination concept while displaying our data. 
+
+Assume per page 10 documents: 
+To display 1st page: db.learners.find().limit(10) 
+To display 2nd page: db.learners.find().skip(10).limit(10) 
+To display 3rd page: db.learners.find().skip(20).limit(10) 
+etc
+
+3. sort():
+~~~~~~~~~~
+
+We can use sort() method to sort documents based on value of a 
+particular field. 
+
+Syntax:      
+    sort({ field: 1})         
+    1 ===> means Ascending order/Alphabetical order         
+    -1 ===> means Descending order/ Reverse of Alphabetical order
+
+
+ Q1. To display all learners based on ascending order of marks?
+ > db.learners.find().sort({marks: 1}).pretty()   
+
+ Q2. To display all learners based on descending order of marks? 
+ > db.learners.find().sort({ marks: -1}).pretty()
+
+
+ Q3. To display all learners based on alphabetical order of names? > db.learners.find().sort({ name: 1}).pretty()
+
+
+sorting based on multiple fields:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We can sort based on multiple fields also:
+
+Syntax: 
+    sort({field1: 1, field2: 1,...})
+
+sorting based on field1, if field1 values are same then sorting based on the field2 for those documents.
+
+Q2. Sort based on ascending order or marks. If two learners have the same marks then sort based on the Reverse of alphabetical order of name?
+
+> db.learners.find().sort({marks: 1, name: -1})
+
+
+Note:  
+----- 
+Chaining of these helper methods is possible.
+
+> db.learners.find().sort({name: -1}).skip(100).limit(15)
+
+all these methods will executed from left to right and hecne order is important.
+
+
+
+Pagination based on alphabetical order of names:
+________________________________________________
+
+We have to sort based on alphabetical order of names. If two students having same name then consider ascending order of marks. Per page only 15 documents.
+
+
+1st page: db.learners.find().sort({name: 1, marks: 1}).limit(15).pretty() 
+
+2nd page: db.learners.find().sort({name: 1, marks: 1}).skip(15).limit(15).pretty() 
+
+3rd page: db.learners.find().sort({name: 1, marks: 1}).skip(30).limit(15).pretty() 
+
+etc
+
+
+
