@@ -11,9 +11,284 @@ We can project array elements by usign the  following operators:
 2. $elemMatch
 3. $slice
 
-1. $Operator:
+1. $ Operator:
 
 We can use $ operator to project first element in array than matches query condition
 
 Syntax:
-db.collection.find(<array>:<condition>,...)
+db.collection.find({<array>:<condition>,...}, {})
+
+
+Case Study
+~~~~~~~~~~
+
+db.student1.insertMany([
+    { _id: 4, name: "Durga", year: 1, marks: [70, 87, 90] },
+    { _id: 5, name: "Ravi", year: 1, marks: [90, 88, 92] },
+    { _id: 6, name: "Shiva", year: 1, marks: [85, 100, 90] },
+    { _id: 7, name: "Durga", year: 2, marks: [79, 85, 80] },
+    { _id: 8, name: "Ravi", year: 2, marks: [88, 88, 92] },
+    { _id: 9, name: "Shiva", year: 2, marks: [95, 90, 96] }
+]);
+
+
+Q1. db.student1.find({marks:{$gte: 85}},{_id:0,marks:1})  
+
+storedb> db.student1.find({marks:{$gte: 85}},{_id:0,marks:1})
+[
+  { marks: [ 70, 87, 90 ] },
+  { marks: [ 90, 88, 92 ] },
+  { marks: [ 85, 100, 90 ] },
+  { marks: [ 70, 87, 90 ] },
+  { marks: [ 90, 88, 92 ] },
+  { marks: [ 85, 100, 90 ] },
+  { marks: [ 79, 85, 80 ] },
+  { marks: [ 88, 88, 92 ] },
+  { marks: [ 95, 90, 96 ] }
+]
+
+Q2. db.student1.find({marks:{$gte: 85}},{_id:0,name: 1, "marks.$":1}) Now instead of all elements, only first matched element will be projected.  
+
+storedb> db.student1.find({marks:{$gte: 85}},{_id:0,name: 1, "marks.$":1})
+[
+  { name: 'Durga', marks: [ 87 ] },
+  { name: 'Ravi', marks: [ 90 ] },
+  { name: 'Shiva', marks: [ 85 ] },
+  { name: 'Durga', marks: [ 87 ] },
+  { name: 'Ravi', marks: [ 90 ] },
+  { name: 'Shiva', marks: [ 85 ] },
+  { name: 'Durga', marks: [ 85 ] },
+  { name: 'Ravi', marks: [ 88 ] },
+  { name: 'Shiva', marks: [ 95 ] }
+]
+
+Q3. db.student1.find({marks:{$all: [88,90]}},{_id:0,name: 1, "marks.$":1}) 
+
+storedb> db.student1.find({marks:{$all: [88,90]}},{_id:0,name: 1, "marks.$":1})
+[ { name: 'Ravi', marks: [ 90 ] }, { name: 'Ravi', marks: [ 90 ] } ]
+
+
+Note: If there is no query condition or if query condition won't include 
+array then we cannot use $ operator, otherwise we will get error.
+
+
+eg-1: > db.student1.find({},{_id:0,name: 1, "marks.$":1}) 
+
+storedb> db.student1.find({},{_id:0,name: 1, "marks.$":1})
+MongoServerError: Executor error during find command :: caused by :: positional operator '.$' couldn't find a matching element in the array
+
+
+**Note: $ operator selects only one element which is first matched element based on query condition.  
+
+
+2. $elemMatch operator: 
+----------------------- 
+1. selects only one element 
+2. which is matched element where condition is specified by 
+$elemMatch explicitly.
+It never considers query condition.  
+
+We can use $elemMatch to project first element in the array that 
+matches specified $elemMatch condition.  
+
+Q1.  
+> db.student1.find({},{_id:0, name:1,year:1,marks:{$elemMatch:{$lt: 95}}})
+
+
+storedb> db.student1.find({},{_id:0, name:1,year:1,marks:{$elemMatch:{$lt: 95}}})
+[
+  { name: 'Durga', year: 1, marks: [ 70 ] },
+  { name: 'Ravi', year: 1, marks: [ 90 ] },
+  { name: 'Shiva', year: 1, marks: [ 85 ] },
+  { name: 'Durga', year: 1, marks: [ 70 ] },
+  { name: 'Ravi', year: 1, marks: [ 90 ] },
+  { name: 'Shiva', year: 1, marks: [ 85 ] },
+  { name: 'Durga', year: 2, marks: [ 79 ] },
+  { name: 'Ravi', year: 2, marks: [ 88 ] },
+  { name: 'Shiva', year: 2, marks: [ 90 ] }
+]
+
+storedb> db.student1.find()
+[
+  { _id: 1, name: 'Durga', year: 1, marks: [ 70, 87, 90 ] },
+  { _id: 2, name: 'Ravi', year: 1, marks: [ 90, 88, 92 ] },
+  { _id: 3, name: 'Shiva', year: 1, marks: [ 85, 100, 90 ] },
+  { _id: 4, name: 'Durga', year: 1, marks: [ 70, 87, 90 ] },
+  { _id: 5, name: 'Ravi', year: 1, marks: [ 90, 88, 92 ] },
+  { _id: 6, name: 'Shiva', year: 1, marks: [ 85, 100, 90 ] },
+  { _id: 7, name: 'Durga', year: 2, marks: [ 79, 85, 80 ] },
+  { _id: 8, name: 'Ravi', year: 2, marks: [ 88, 88, 92 ] },
+  { _id: 9, name: 'Shiva', year: 2, marks: [ 95, 90, 96 ] }
+]
+storedb>
+
+storedb> db.student1.find({year:1},{_id:0,
+... name:1,year:1,marks:{$elemMatch:{$gt: 85}}})
+[
+  { name: 'Durga', year: 1, marks: [ 87 ] },
+  { name: 'Ravi', year: 1, marks: [ 90 ] },
+  { name: 'Shiva', year: 1, marks: [ 100 ] },
+  { name: 'Durga', year: 1, marks: [ 87 ] },
+  { name: 'Ravi', year: 1, marks: [ 90 ] },
+  { name: 'Shiva', year: 1, marks: [ 100 ] }
+]
+
+
+What is the difference between $ and $elemMatch operators: ------------------------------------------------------------- Both operators project the first matching element from an array based on a condition.  
+
+$ operator will select array element based on query condition. But $elemMatch will select array element based on explicit condition specified by $elemMatch but not based on query condition. 
+
+> db.student1.find({year:1,marks:{$gte: 85}},{_id:0,name:1,"marks.$":1})
+
+storedb> db.student1.find({year:1,marks:{$gte: 85}},{_id:0,name:1,"marks.$":1})
+[
+  { name: 'Durga', marks: [ 87 ] },
+  { name: 'Ravi', marks: [ 90 ] },
+  { name: 'Shiva', marks: [ 85 ] },
+  { name: 'Durga', marks: [ 87 ] },
+  { name: 'Ravi', marks: [ 90 ] },
+  { name: 'Shiva', marks: [ 85 ] }
+]
+
+> db.student1.find({year:1,marks:{$gte: 
+85}},{_id:0,name:1,marks:{$elemMatch:{$gt:89}}})
+
+
+storedb> db.student1.find({year:1,marks:{$gte:
+... 85}},{_id:0,name:1,marks:{$elemMatch:{$gt:89}}})
+[
+  { name: 'Durga', marks: [ 90 ] },
+  { name: 'Ravi', marks: [ 90 ] },
+  { name: 'Shiva', marks: [ 100 ] },
+  { name: 'Durga', marks: [ 90 ] },
+  { name: 'Ravi', marks: [ 90 ] },
+  { name: 'Shiva', marks: [ 100 ] }
+]
+
+
+3. $slice operator: 
+------------------- 
+By using $slice operator we can select required number of elements in the array. 
+
+Syntax-1: 
+--------- 
+db.collection.find({query},{<array>:{$slice: n}})  
+n-->number of elements to be selected. 
+
+Specify a positive number n to return the first n elements. 
+Specify a negative number n to return the last n elements. 
+If n is greater than number of elements in the array then all elements will be selected.  
+
+eg-1: 
+> db.student1.find({},{_id:0,name:1,year:1, marks:{$slice: 2}}) In the array only first 2 elements will be selected.  
+
+storedb> db.student1.find({},{_id:0,name:1,year:1, marks:{$slice: 2}})
+[
+  { name: 'Durga', year: 1, marks: [ 70, 87 ] },
+  { name: 'Ravi', year: 1, marks: [ 90, 88 ] },
+  { name: 'Shiva', year: 1, marks: [ 85, 100 ] },
+  { name: 'Durga', year: 1, marks: [ 70, 87 ] },
+  { name: 'Ravi', year: 1, marks: [ 90, 88 ] },
+  { name: 'Shiva', year: 1, marks: [ 85, 100 ] },
+  { name: 'Durga', year: 2, marks: [ 79, 85 ] },
+  { name: 'Ravi', year: 2, marks: [ 88, 88 ] },
+  { name: 'Shiva', year: 2, marks: [ 95, 90 ] }
+]
+
+
+:  db.student1.find({},{_id:0,name:1,year:1, marks:{$slice: -2}})
+In the array only last 2 elements will be selected.
+
+
+storedb> db.student1.find({},{_id:0,name:1,year:1, marks:{$slice: -2}})
+[
+  { name: 'Durga', year: 1, marks: [ 87, 90 ] },
+  { name: 'Ravi', year: 1, marks: [ 88, 92 ] },
+  { name: 'Shiva', year: 1, marks: [ 100, 90 ] },
+  { name: 'Durga', year: 1, marks: [ 87, 90 ] },
+  { name: 'Ravi', year: 1, marks: [ 88, 92 ] },
+  { name: 'Shiva', year: 1, marks: [ 100, 90 ] },
+  { name: 'Durga', year: 2, marks: [ 85, 80 ] },
+  { name: 'Ravi', year: 2, marks: [ 88, 92 ] },
+  { name: 'Shiva', year: 2, marks: [ 90, 96 ] }
+]
+
+
+eg-3: > db.student1.find({},{_id:0,name:1,year:1, marks:{$slice: 100}}) 
+In this case all elements will be included
+
+storedb> db.student1.find({},{_id:0,name:1,year:1, marks:{$slice: 100}})
+[
+  { name: 'Durga', year: 1, marks: [ 70, 87, 90 ] },
+  { name: 'Ravi', year: 1, marks: [ 90, 88, 92 ] },
+  { name: 'Shiva', year: 1, marks: [ 85, 100, 90 ] },
+  { name: 'Durga', year: 1, marks: [ 70, 87, 90 ] },
+  { name: 'Ravi', year: 1, marks: [ 90, 88, 92 ] },
+  { name: 'Shiva', year: 1, marks: [ 85, 100, 90 ] },
+  { name: 'Durga', year: 2, marks: [ 79, 85, 80 ] },
+  { name: 'Ravi', year: 2, marks: [ 88, 88, 92 ] },
+  { name: 'Shiva', year: 2, marks: [ 95, 90, 96 ] }
+]
+
+
+Syntax-2:
+~~~~~~~~~
+
+db.collection.find({query},{<array>:{$slice: [n1,n2]}}) 
+skip n1 number of elements and then select n2 number of elements.  
+
+n1--->number to skip 
+n2--->number to return
+
+
+eg-1: skip first element and then select next two elements.  
+
+> db.student1.find({year:1},{_id:0,name:1, marks:{$slice: [1,2]}}) 
+
+storedb> db.student1.find({year:1},{_id:0,name:1, marks:{$slice: [1,2]}})
+[
+  { name: 'Durga', marks: [ 87, 90 ] },
+  { name: 'Ravi', marks: [ 88, 92 ] },
+  { name: 'Shiva', marks: [ 100, 90 ] },
+  { name: 'Durga', marks: [ 87, 90 ] },
+  { name: 'Ravi', marks: [ 88, 92 ] },
+  { name: 'Shiva', marks: [ 100, 90 ] }
+]  
+
+
+eg-2: skip first 2 elements and select next 10 elements. 
+> db.student1.find({year:1},{_id:0,name:1, marks:{$slice: [2,10]}})  
+
+
+storedb> db.student1.find({year:1},{_id:0,name:1, marks:{$slice: [2,10]}})
+[
+  { name: 'Durga', marks: [ 90 ] },
+  { name: 'Ravi', marks: [ 92 ] },
+  { name: 'Shiva', marks: [ 90 ] },
+  { name: 'Durga', marks: [ 90 ] },
+  { name: 'Ravi', marks: [ 92 ] },
+  { name: 'Shiva', marks: [ 90 ] }
+]
+
+
+eg-2: skip first 2 elements and select next 10 elements. 
+> db.student1.find({year:1},{_id:0,name:1, marks:{$slice: [2,10]}})  
+
+
+storedb> db.student1.find({year:1},{_id:0,name:1, marks:{$slice: [2,10]}})
+[
+  { name: 'Durga', marks: [ 90 ] },
+  { name: 'Ravi', marks: [ 92 ] },
+  { name: 'Shiva', marks: [ 90 ] },
+  { name: 'Durga', marks: [ 90 ] },
+  { name: 'Ravi', marks: [ 92 ] },
+  { name: 'Shiva', marks: [ 90 ] }
+]
+
+eg-3: required only 7th element in the array? 
+> db.students.find({},{_id:0,name:1, marks:{$slice: [6,1]}}) 
+
+eg-4: required from 3rd to 10th elements 
+> db.students.find({},{_id:0,name:1, marks:{$slice: [2,8]}})
+
+
