@@ -15,3 +15,5 @@ We can project array elements by usign the  following operators:
 
 We can use $ operator to project first element in array than matches query condition
 
+Syntax:
+db.collection.find(<array>:<condition>,...)
