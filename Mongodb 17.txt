@@ -1,0 +1,17 @@
+
+Projection of Array Elements | Array Elements Projection Operators:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+> db.books.find({"tags":"programming"},{title:1, "tags.$":1, _id:0})
+
+We can project array elements by usign the  following operators:
+
+1. $
+2. $elemMatch
+3. $slice
+
+1. $Operator:
+
+We can use $ operator to project first element in array than matches query condition
+

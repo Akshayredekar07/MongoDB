@@ -319,4 +319,3 @@ storedb> db.books.find({tags:"programming"},{title:1, "tags.$":1, _id:0}).pretty
 `````
 
 
-
