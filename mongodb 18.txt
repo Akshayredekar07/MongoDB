@@ -1,0 +1,68 @@
+
+
+CRUD Operations 
+
+C--->Create Operation | Insert Operation 
+R--->Retrieve Operation | Read Operation 
+U--->Update Operation  
+ 
+ U--->Update Operation: 
+ ---------------------- 
+ 
+students collection 
+
+Based on our requirement, we can perform update operations to 
+reflect latest information.  
+
+eg-1: update student document with changed mobile number 
+eg-2: Increment all employee salaries by 1000 if salary is less than 10000  
+
+We can perform updations like  
+
+1. Overwrite existing value of a particular field with our new value
+2. Add a new field for selected documents 
+3. Remove an existing field 
+4. Rename an existing field etc
+
+How to perform updations: 
+------------------------- 
+We can perform required updations by using update methods and 
+update operators.  
+
+
+update methods: 
+--------------- 
+There are 3 update methods are avaialble. 
+
+1. updateOne()
+2. updateMany()
+3. update()
+
+
+1. updateOne():
+Syntax: db.collection.updateOne(filter, update, options)
+
+It finds the first document that matches filter criteria and perform required updation. 
+It will perform updation for a single document.   
+
+2. updateMany(): 
+--------------- 
+
+db.collection.updateMany(filter,update,options)  
+
+To update all documents that match the specified filter criteria.  
+
+3. update(): 
+----------- 
+db.collection.update(filter,update,options)  
+
+We can use this method to update either a single document or multiple documents. Bydefault this method updates a single document only.  If we include multi:true to update all documents that match query criteria.  
+
+db.collection.update(filter,update)--->To update a single document 
+db.collection.update(filter,update,{multi:true})--->To update all matched documents  
+
+
+Case Study: 
+----------- 
+
+db.employee
