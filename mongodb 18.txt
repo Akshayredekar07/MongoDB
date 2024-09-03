@@ -65,4 +65,96 @@ db.collection.update(filter,update,{multi:true})--->To update all matched docume
 Case Study: 
 ----------- 
 
-db.employee
+db.employees.insert({_id:1, eno:100, ename:"Sunny", esal:1000, eaddr:"Mumbai"})  
+db.employees.insert({_id:2, eno:200, ename:"Bunny", esal:2000, eaddr:"Hyderabad"})  
+db.employees.insert({_id:3, eno:300, ename:"Chinny", esal:3000, eaddr:"Mumbai"})  
+db.employees.insert({_id:4, eno:400, ename:"Vinny", esal:4000, eaddr:"Delhi"})  
+db.employees.insert({_id:5, eno:500, ename:"Pinny", esal:5000, eaddr:"Chennai"})  
+db.employees.insert({_id:6, eno:600, ename:"Tinny", esal:6000, eaddr:"Mumbai"})  
+db.employees.insert({_id:7, eno:700, ename:"Zinny", esal:7000, eaddr:"Delhi"})
+
+db.employees.find()
+
+>> to perform updation we have to use update operator like $set, $unset, $inc, $mul, $rename, $min, $max, $currentDate etc
+
+Q1. Update the sarary of sunny to 9999?
+> db.employees.update({ename:"Sunny"},{$set:{esal:9999}});
+> db.employees.find({ename:"Sunny"});
+
+```
+storedb> db.employees.update({ename:"Sunny"},{$set:{esal:9999}});
+DeprecationWarning: Collection.update() is deprecated. Use updateOne, updateMany, or bulkWrite.
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+storedb> db.employees.find({ename:"Sunny"});
+[ { _id: 1, eno: 100, ename: 'Sunny', esal: 9999, eaddr: 'Mumbai' } ]
+```
+
+Q2. Update all Mumbai based employee salary by 7777?
+> db.employees.update({eaddr:"Mumbai"},{$set:{esal:7777}});
+--- Only for single document updation
+
+> db.employees.update({eaddr:"Mumbai"},{$set:{esal:7777}},{multi:true});
+--- For multiple document updation
+
+> db.employees.find({eaddr:"Mumbai"});
+
+Note: updateOne() will always consider only first matched document If updation is not avaialble then only it perform updation
+
+
+Q3. update all delhi based employee salary as 5555?
+
+> db.employees.update({eaddr:"Delhi"},{$set:{esal:5555}});
+--- Only for single document updation
+
+> db.employees.update({eaddr:"Delhi"},{$set:{esal:5555}},{multi:true});
+--- For multiple document updation
+
+> db.employees.find({eaddr:"Delhi"});
+
+db.employees.update({eaddr:"Delhi"},{$set:{esal:4444}},{multi:true});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 2,
+  modifiedCount: 2,
+  upsertedCount: 0
+}
+
+
+
+Update Operators: 
+----------------- 
+
+We can use update operators to perform updation. 
+
+1. $set
+2. $unset 
+3. $inc 
+4. $mul 
+5. $rename 
+6. $min 
+7. $max 
+8. $currentDate 
+
+
+1. $set: 
+
+We can use $set operator to update existing value of a field or to add new value to a field. 
+
+
+Case-1:
+If the specified field is not available in the document then $set operator will add the value of specified field. 
+
+> db.employees.update({ename:"Sunny"},{$set:{esal:9999}});
+> db.employees.find();
+
+> db.employees.update({eaddr:"Mumbai"},{$set:{esal:7777}});
+> db.employees.find();
+
+db.employees.update({eaddr:"Mumbai"},{$set:{eaddr:"Mumbai1"}});
