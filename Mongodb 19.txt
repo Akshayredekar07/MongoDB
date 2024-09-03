@@ -1,0 +1,13 @@
+
+2. $unset operator: 
+------------------- 
+To delete the specified field.  
+Syntax: {$unset: {field1:"",field2:"",...}}  
+
+The specified value in the $unset expression (ie "") does not impact 
+operation.  
+
+Q1. Delete esal and husband fields where ename is "Sunny"? 
+
+> db.employees.update({ename: "Sunny"},{$unset: {esal:0,husband:""}}) 
+
