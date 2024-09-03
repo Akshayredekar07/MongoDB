@@ -158,3 +158,39 @@ If the specified field is not available in the document then $set operator will 
 > db.employees.find();
 
 db.employees.update({eaddr:"Mumbai"},{$set:{eaddr:"Mumbai1"}});
+
+Case-2: updating multiple fields at a time ------------------------------------------ 
+We can perform updations for multiple fields at a time.  
+{$set: {field1: value1, field2:value2, ...}}  
+
+> db.employees.update({ename:"Sunny"},{$set: {esal: 1111, age: 45, 
+origin: "Punjab"}}) 
+
+Q3. Add a new filed named with friend value Guest where esal value is >= 4000?
+
+db.employees.update({esal:{$gte:4000}},{$set:{friend:"Guest"}},{multi:true});
+
+
+case-3: Nested document updation: --------------------------------------------------
+
+Q. Change callname of Sara to Virushka?
+storedb> db.books.find().limit(1);
+[
+  {
+    _id: ObjectId("66c49da6b033c154dd47d271"),
+    title: 'Web Development Essentials',
+    isbn: 8910,
+    downloadable: true,
+    no_of_reviews: 40,
+    tags: [ 'web development', 'html', 'css', 'javascript' ],
+    languages: [ 'english', 'german', 'mandarin' ],
+    author: {
+      name: 'Sara Lee',
+      callname: 'Sara',
+      profile: { exp: 7, courses: 4, books: 2 }
+    }
+  }
+]
+
+db.books.update({"author.name": "Sara Lee"},{$set: 
+{"author.callname": "Virushka"}})
