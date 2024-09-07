@@ -11,3 +11,196 @@ Q1. Delete esal and husband fields where ename is "Sunny"?
 
 > db.employees.update({ename: "Sunny"},{$unset: {esal:0,husband:""}}) 
 
+> db.employees.update({ename: "Sunny"}, {$set: {esal: 50000, husband: "Ravi"}})
+
+
+Q. Remove field husband and friend where esal is less than 8000?
+
+db.employees.updateMany({esal:{$lt:8000}}, {$unset: {husband:"", friend:""}})
+
+
+3. $rename operator:
+~~~~~~~~~~~~~~~~~~~~
+We can use $rename operator to rename the fields, i.e to chnage name of the field.
+
+esal ----> salary
+
+Syntax:
+{$rename: {field1:<newName1>, field2:<newName2>, ...}}
+
+
+Q. Write a query to rename esal as salary and eaddress as city in employees collection?
+
+> db.employees.updateMany({}, {$rename: {esal: "salary", eaddr: "city"}})
+
+
+storedb> db.employees.updateMany({}, {$rename: {esal: "salary", eaddr: "city"}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 7,
+  modifiedCount: 7,
+  upsertedCount: 0
+}
+storedb> db.employees.find()
+[
+  {
+    _id: 1,
+    eno: 100,
+    ename: 'Sunny',
+    age: 45,
+    origin: 'Punjab',
+    city: 'Mumbai',
+    salary: 1111
+  },
+  { _id: 2, eno: 200, ename: 'Bunny', city: 'Hyderabad', salary: 2000 },
+  { _id: 3, eno: 300, ename: 'Chinny', city: 'Mumbai', salary: 7777 },
+  { _id: 4, eno: 400, ename: 'Vinny', city: 'Delhi', salary: 4444 },
+  { _id: 5, eno: 500, ename: 'Pinny', city: 'Chennai', salary: 5000 },
+  { _id: 6, eno: 600, ename: 'Tinny', city: 'Mumbai', salary: 7777 },
+  { _id: 7, eno: 700, ename: 'Zinny', city: 'Delhi', salary: 4444 }
+]
+storedb>
+
+
+Note:
+~~~~
+
+{
+    eno: 100
+    esal:1000
+    eaddr:"Hyderabad"
+}
+
+rename esal field as salary.
+
+db.employees.updat({}, {$rename: {esal: "salary", }})
+
+How this rename works internally:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Internally $set and $unset operation happen ther order of the field many not be same 
+
+How to handle this case: --note the loop hole if the renamed field is aready aviaables then in n=many be case of alter data
+~~~~~~~~~~~~~~~~~~~~~~~~~
+{
+    eno: 100
+    eaddr:"Hyderabad"
+    esal:1000
+    city:"Mumbai"
+}
+
+{
+    eno: 100
+    city:"Hyderabad"
+    esal:1000
+}
+
+
+```````Note`````````
+>>>>>>>>>>>>>>>>>>
+1. Then $rename operator internally performs $unsert of both obd name and new name and then performs $set with the new name. Hence it wont preserver order of fields
+
+2. If the document already has a field with the newName then $rename operator remove that field and renames specified field with the newName.
+
+
+e.g
+
+> db.employees.insert({ _id: 8, eno: 800, ename: 'Minny', eaddr: 'Hyderabad', esal: 8000, city: 'Mumbai' })
+
+> db.employees.find()
+
+```
+db.employees.update({_id:8}, {$set: {city: "Mumbai"}})
+
+Q. rename eaddr as city?
+
+> db.employees.update({_id:8}, {$rename: {eaddr: "city"}})
+
+3. If the filed to rename is does not exist in the document then $rename wont do anything 
+
+e.g update age to totalage?
+> db.employees.update({_id:8}, {$rename: {age: "totalage"}})
+
+
+$inc operator
+~~~~~~~~~~~~~
+
+inc means incremant.
+we can use $inc to incremant or decrement value of the field with specifed amount.
+e.g
+salary = salary+2000
+salary = salary-1000
+
+
+Syntax:
+~~~~~~~~
+{$inc: {field1: amount1, field2:amount2}}
+
+
+> db.employees.drop()
+
+Case study:
+~~~~~~~~~~~
+
+db.employees.insert({_id:1,eno:100,ename:"Sunny",esal:1000,eaddr:"Mumbai"}) 
+db.employees.insert({_id:2,eno:200,ename:"Bunny",esal:2000,eaddr:"Hyderabad"}) 
+db.employees.insert({_id:3,eno:300,ename:"Chinny",esal:3000,eaddr:"Mumbai"}) 
+db.employees.insert({_id:4,eno:400,ename:"Vinny",esal:4000,eaddr:"Delhi"}) 
+db.employees.insert({_id:5,eno:500,ename:"Pinny",esal:5000,eaddr:"Chennai"}) 
+db.employees.insert({_id:6,eno:600,ename:"Tinny",esal:6000,eaddr:"Mumbai"}) 
+db.employees.insert({_id:7,eno:700,ename:"Zinny",esal:7000,eaddr:"Delhi"})
+
+
+~~~~
+
+Q. incremant all employee salary by 500.
+> db.employees.updateMany({}, {$inc: {esal: 500}})
+
+Q. decrement all employee salary by 1 where esal > 4700
+> db.employees.updateMany({esal: {$gt:4700}}, {$inc: {esal: -1}})
+
+storedb> db.employees.find()
+[
+  { _id: 1, eno: 100, ename: 'Sunny', esal: 1500, eaddr: 'Mumbai' },
+  { _id: 2, eno: 200, ename: 'Bunny', esal: 2500, eaddr: 'Hyderabad' },
+  { _id: 3, eno: 300, ename: 'Chinny', esal: 3500, eaddr: 'Mumbai' },
+  { _id: 4, eno: 400, ename: 'Vinny', esal: 4500, eaddr: 'Delhi' },
+  { _id: 5, eno: 500, ename: 'Pinny', esal: 5500, eaddr: 'Chennai' },
+  { _id: 6, eno: 600, ename: 'Tinny', esal: 6500, eaddr: 'Mumbai' },
+  { _id: 7, eno: 700, ename: 'Zinny', esal: 7500, eaddr: 'Delhi' }
+]
+storedb> db.employees.updateMany({esal: {$gt:4700}}, {$inc: {esal: -1}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 3,
+  modifiedCount: 3,
+  upsertedCount: 0
+}
+storedb> db.employees.find()
+[
+  { _id: 1, eno: 100, ename: 'Sunny', esal: 1500, eaddr: 'Mumbai' },
+  { _id: 2, eno: 200, ename: 'Bunny', esal: 2500, eaddr: 'Hyderabad' },
+  { _id: 3, eno: 300, ename: 'Chinny', esal: 3500, eaddr: 'Mumbai' },
+  { _id: 4, eno: 400, ename: 'Vinny', esal: 4500, eaddr: 'Delhi' },
+  { _id: 5, eno: 500, ename: 'Pinny', esal: 5499, eaddr: 'Chennai' },
+  { _id: 6, eno: 600, ename: 'Tinny', esal: 6499, eaddr: 'Mumbai' },
+  { _id: 7, eno: 700, ename: 'Zinny', esal: 7499, eaddr: 'Delhi' }
+]
+
+
+```````````
+Note: 1. If the specified field does not exist, $inc creates that field and sets that field to the specified value.
+
+> db.employees.updateMany({},{$inc: {age:2}}) 
+
+
+`````````
+2. We cannot perform multiple updates on the same field at a time, 
+otherwise we will get error.  
+
+> db.employees.updateMany({},{$inc:{esal:500}, $set:{esal:5000}})  
+
+storedb> db.employees.updateMany({},{$inc:{esal:500}, $set:{esal:5000}})
+MongoServerError: Updating the path 'esal' would create a conflict at 'esal'
+
