@@ -1,0 +1,33 @@
+
+$set--->To set a new value to the specified field/To create a new field 
+with provided value 
+
+$unset--->To delete specified field 
+
+$rename--->To rename the specified field 
+
+$inc--->To perform increment and decrement operations on the field 
+value  
+
+
+Basic understanding purpose: 
+````````````````````````````
+
+5. $min operator
+~~~~~~~~~~~~~~~~
+
+Q1. Update 5000 Minimum salary for the every employee?--> $max operator 
+Q2. Update 5000 Maximum salary for the every employee?--> $min operator
+Q3. Incremant Every employee slary by 10% ---> $mul  esal*1.1
+Q3. Double every employee salary as covid offer ---> $mul operator esal*2
+
+
+1000 ---> 1100
+
+4. $min operator:
+~~~~~~~~~~~~~~~~~
+
+It only updates field value if the specified value is less than current field values?
+
+(provided value, current value)
+
