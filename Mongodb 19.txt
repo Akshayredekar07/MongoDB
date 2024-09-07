@@ -204,3 +204,4 @@ otherwise we will get error.
 storedb> db.employees.updateMany({},{$inc:{esal:500}, $set:{esal:5000}})
 MongoServerError: Updating the path 'esal' would create a conflict at 'esal'
 
+

@@ -29,5 +29,39 @@ Q3. Double every employee salary as covid offer ---> $mul operator esal*2
 
 It only updates field value if the specified value is less than current field values?
 
-(provided value, current value)
+minimum value of(provided value, current value)
 
+Syntax: {$min:{field1:value1, field2:value2,...}}
+
+Q. Make maximum salary for every employee is 5000 if any employee salary greater than 5000 then assign 5000?
+
+db.employees.updateMany({},{$min:{esal:5000}})
+
+
+$max operator:
+~~~~~~~~~~~~~~
+
+max operator updates the value of field to the specified value is greater than current field values?
+
+maximum value of(provided value, current value)
+
+Syntax: {$max:{field1:value1, field2:value2,...}}
+
+Q. Make minimum salary for every employee is 10000 if any employee salary less than 10000 then assign 10000?
+
+db.employees.updateMany({},{$max:{esal:10000}})
+
+
+Note: If the specified field does not exist, then $max operator creates 
+that field and assigns it the provided value.
+
+> db.employees.updateMany({}, {$max: {height: 5.8}})
+
+Note: 
+1. If provided value is less than current value then only perform 
+updation-->min operator. 
+2. If provided value is greater than current value then only perform 
+updation-->max operator.  
+
+Q. what if we don't want min/max operator to create the new field? Select all documents where specified field exists and then perform 
+updation
