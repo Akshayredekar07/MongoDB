@@ -1,1 +1,132 @@
-This is the content of mongodb 21.txt
+
+ what if we don't want min/max operator to create the new field? 
+
+storedb> db.employees.update({age: {exists:true}}, {$set:{age:15}}, {multi:true})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+
+
+db.employees.updateMany(
+  { age: { $exists: true } },
+  { $set: { age: 15 } }
+)
+
+
+storedb> db.employees.updateMany(
+...   { age: { $exists: true } },
+...   { $set: { age: 15 } }
+... )
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 7,
+  modifiedCount: 7,
+  upsertedCount: 0
+}
+
+````
+storedb> db.employees.update({phone_number:{$exists:true}},{$set:{phone_number:1234}},{multi:true})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+
+phone_number field not created.
+
+$mul operator:
+~~~~~~~~~~~~~~
+
+mul means multiplication
+
+We can use $mul operator to multiply the value of a field by a number.  
+{$mul: {field: number}} 
+
+The field to update must contain numeric value. 
+
+Q1. Double all employee salary where esal is less than 10000? > db.employees.updateMany({esal: {$eq: 10000}},{$mul: {esal: 2}})
+Q1. Double all employee salary where esal is less than 10000? >
+
+db.employees.updateMany({esal: {$eq: 20000}},{$mul: {esal: 0.04}})
+
+
+Q2. Increment Salary by 10% for all employees belongs to Mumbai? > db.employees.updateMany({eaddr: "Mumbai"},{$mul: {esal: 1.1}})   
+
+
+> db.employees.updateMany({}, {$mul: {xyz: 3, abc:3.5}})
+
+
+```
+Note:  If the specified field is not available then $mul creates that field and sets the value to zero.
+
+storedb> db.employees.updateMany({}, {$mul: {xyz: 3, abc:3.5}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 7,
+  modifiedCount: 7,
+  upsertedCount: 0
+}
+
+
+Note: 1. 
+$set --->To set a new value to the existing field or to create new 
+field 2. $unset--->To unset/delete existing field 
+3. $rename-->To rename the value of the field. 
+4. $inc --->To increment or decrement field value 
+5. $min --->To update only if the provided value is less than current 
+value  
+6. $max --->To update only if the provided value is greater than current 
+value 
+7. $mul -->To multiply field value by a number  
+
+
+Understanding upsert property: 
+----------------------------- 
+Whenever we are trying to perform update operation, the matched 
+document may or may not available.If it is available then it will be updated and if it is not available then update won't be happend.  
+If the document not available then we can insert that document in the database automatically. For this we have to use upsert property. 
+
+
+upsert = update + insert 
+at the time two works update and insert. First update and if it is not possible then insert.  
+upsert will take boolean value. 
+If it is set to true, it will creates a new document if it is not available. 
+If it is set to false, then it will perform just update operation and won't create any new document. 
+The default value of upsert is: false.
+
+>db.employees.find() 
+
+> db.employees.update({ename: "Mallika"}, {$set: {_id:11,esal:9999,eaddr:"Mumabi"}})
+
+storedb> db.employees.update({ename: "Mallika"}, {$set: {_id:11,esal:9999,eaddr:"Mumabi"}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+
+
+> db.employees.update({ename: "Mallika"}, {$set: 
+{_id:11,esal:9999,eaddr:"Mumabi"}}, {upsert: false}) 
+
+storedb> db.employees.update({ename: "Mallika"}, {$set:
+... {_id:11,esal:9999,eaddr:"Mumabi"}}, {upsert: false})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+
+> db.employees.update({ename: "Mallika"}, {$set: {_id:11,esal:9999,eaddr:"Mumabi"}}, {upsert: true})
