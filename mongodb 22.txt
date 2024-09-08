@@ -1,1 +1,96 @@
-This is the content of mongodb 22.txt
+
+Understanding Update Operators:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. $
+2. $[]
+3. $[<indentifier>]
+
+marks: [70, 89, 56, 38, 45]
+
+Updating First Matched element by using $: --------------------------------------------- 
+$ acts as a placeholder to update first matched element based on 
+query condition.  
+
+Syntax: db.collection.update(query,{update_operator:{"<array>.$" : value}})  
+
+The array field must appear as the part of query condition.  
+
+
+Case Study: 
+----------- 
+
+db.students.insertOne({_id:1, marks: [70,87,90,30,40]}) 
+db.students.insertOne({_id:2, marks: [90,88,92,110,45]}) 
+db.students.insertOne({_id:3, marks: [85,100,90,76,58]}) 
+db.students.insertOne({_id:4, marks: [79,85,80,89,56]}) 
+db.students.insertOne({_id:5, marks: [88,88,92,45,23]}) 
+db.students.insertOne({_id:6, marks: [95,90,96,92,95]})  
+
+Q1. Update the first matched element 90 in marks array to 999 where _id:1? 
+
+db.students.updateOne(
+  { _id: 1, marks: 90 },
+  { $set: { "marks.$": 999 } }
+)
+
+
+Q2. Update the first matched element in marks array is less than 90 with 999 in every documents?
+
+db.students.updateMany(
+  { marks: { $lt: 90 } },
+  { $set: { "marks.$": 999 } }
+)
+
+
+
+2. Updating all array elements by using $[]: -------------------------------------------- 
+$[] acts as placeholder to update all elements in the array for the matched documents based on query condition.  
+
+Syntax: db.collection.update(query,{update_operator:{"<array>.$[]" : value}}) 
+
+
+Q1. To increment all element of marks array by 10?
+
+db.students.updateMany({},{$inc: {"marks.$[]": 10}})
+
+
+Q2. Update every element of marks array as 1000 if array contins atleast one element which is greater than or equal to 1000?
+
+> db.students.updateMany({marks:{$elemMatch:{$gte:1000}}},{$set: 
+{"marks.$[]": 1000}})
+
+
+
+
+3. Updating specific array elements by using $[identifier]: ----------------------------------------------------------- Instead of updating only first matched element or all elements of the array, we can update only required array elements. For this we have to use $[identifier]  
+
+$[identifier] --->Acts as placeholder to update all elements that match the arrayFilters condition for the documents that match query condition.  
+In this case updation is based on arrayFilters condition but not based on query condition.  
+
+Syntax:
+
+Q. Update all marks array elements which are less than 100 as 100?
+
+db.students.updateMany({},{$set: {"marks.$[element]": 
+100}},{arrayFilters:[{"element": {$lt: 100}}]})
+
+
+Q. If we specify both query and arrayFilters in this case what is the 
+order? Ans: query condition helpful to select documents. In those selected documents, based on arrayFilters condition array 
+elements will be updated.
+
+
+Q2. Write query to perform the following update? If the marks in the range 101 to 110 make as 110.  
+  
+> db.students.updateMany({},{$set: {"marks.$[e1]": 110}},{arrayFilters: [{$and: [{"e1":{$gt:100}},{"e1":{$lte:110}}]}]})
+
+> db.stude nts.updateMany({}, {$set: {"marks.$[element]": 110}}, {arrayFilters: [{$and: [{"element": {$gt:100}}, {"element":{$lte:110}}]}]})
+
+
+`````
+Note:
+
+$ ---> To update only first matched element of array
+$[] --> To update all elements of the array
+$[identifier] --->To update specific array elements
