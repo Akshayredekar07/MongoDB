@@ -21,6 +21,7 @@ db.Employees.insertOne({empno:76, ename:"Ankit", esal:2345, eaddr:"Pune", hobbie
 ```
 
 ## Consider the example:
+**books.json** 
 
 ```json
 [
@@ -52,6 +53,8 @@ mongoimport --db Bookstore --collection books --file book books.json --jsonArray
 Execute it from the command prompt not from MongoDB shell:
 
 ### Download the mongodb tools:
+[Download](https://www.mongodb.com/try/download/database-tools). The key tool for importing is `mongoimport`, which supports importing data from JSON, CSV, or TSV files into MongoDB collections.
+
 ```bash
 mongoimport "C:\Users\Akshay\Documents\DATABASES\MongoDB Durgasoft\books.json" -d Bookstore -c books --jsonArray --drop
 ```

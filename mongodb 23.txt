@@ -1,1 +1,239 @@
-This is the content of mongodb 23.txt
+db.students.drop()
+
+Insert the data:
+
+db.students.insertOne({_id: 1, marks: [70, 87, 90, 30, 40]});   
+db.students.insertOne({_id: 2, marks: [90, 88, 92, 110, 45]});   
+db.students.insertOne({_id: 3, marks: [85, 100, 90, 76, 58]});   
+db.students.insertOne({_id: 4, marks: [79, 85, 80, 89, 56]});   
+db.students.insertOne({_id: 5, marks: [88, 88, 92, 45, 23]});   
+db.students.insertOne({_id: 6, marks: [95, 90, 96, 92, 95]}); 
+
+Write query to perform the following update? 
+If the marks in the range 71 to 80 make as 80 
+If the marks in the range 81 to 90 make as 90 
+If the marks in the range 91 to 100 make as 100
+
+
+> db.students.updateMany({}, {
+    $set: {
+        "marks.$[e1]": 80,
+        "marks.$[e2]": 90,
+        "marks.$[e3]": 100
+    }
+}, {
+    arrayFilters: [
+        { $and: [{"e1": {$gt: 70}}, {"e1": {$lte: 80}}] },
+        { $and: [{"e2": {$gt: 80}}, {"e2": {$lte: 90}}] },
+        { $and: [{"e3": {$gt: 90}}, {"e3": {$lte: 100}}] }
+    ]
+});
+
+`````
+db.students.updateMany(  
+    {},  
+    {  
+        $set: {  
+            "marks.$[e1]": 80,  
+            "marks.$[e2]": 90,  
+            "marks.$[e3]": 100  
+        }  
+    },  
+    {  
+        arrayFilters: [  
+            { "e1": { $gt: 70, $lte: 80 } },  
+            { "e2": { $gt: 80, $lte: 90 } },  
+            { "e3": { $gt: 90, $lte: 100 } }  
+        ]  
+    }  
+);
+````
+storedb> db.students.find()
+[
+  { _id: 1, marks: [ 70, 90, 90, 30, 40 ] },
+  { _id: 2, marks: [ 90, 90, 100, 110, 45 ] },
+  { _id: 3, marks: [ 90, 100, 90, 80, 58 ] },
+  { _id: 4, marks: [ 80, 90, 80, 90, 56 ] },
+  { _id: 5, marks: [ 90, 90, 100, 45, 23 ] },
+  { _id: 6, marks: [ 100, 90, 100, 100, 100 ] }
+]
+
+
+$push operation:
+````````````````
+Adding elements to the array by using $push operator:
+We can use $push operator to add the array.
+
+15
+marks: [10,20,30,40,15]
+
+Syntax:
+db.collection.update({},{$push: {<array1>: value1,...}})
+
+eg1: Adding a single element:
+{_id: 1, "marks":[70,90,90]}
+
+> db.students.update({_id:1}, {$push: {marks: 35}})
+
+{ _id: 1, marks: [ 70, 90, 90, 30, 40, 35 ] },
+
+e.g2: Adding multiple elements:
+> db.students.update({_id:1}, {$push: {marks: 36,marks: 37, marks: 38}})
+
+
+ 
+It is not added 3 elements only one element added. 
+Reason: In Javascript object, duplicate keys are not allowed. If we are trying to add entry with duplicate key, old value will be replaced with new value. 
+{marks: 36,marks: 37, marks: 38} ===>{marks: 38} 
+
+>db.students.update({_id:1}, {$push: {marks: [39,40,41]}})   
+
+> db.students.find()
+
+  {
+    _id: 1,
+    marks: [ 70, 90, 90, 30, 40, 35, 38, [ 39, 40, 41 ], [ 39, 40, 41 ] ]
+  },
+
+``````````````````````````````
+  Total array added as single element.  
+  
+  We can add elements of the array individually by using $each modifier.
+
+  $each modifier: 
+  --------------- 
+  We can use $each modifier to add multiple values to the array. 
+  
+  Syntax: { $push: { <array>: {$each: [value1,value2,...]} }  }
+  
+  > db.students.update({_id:1}, {$push: {marks: {$each: [42,43,44]}}})  
+  
+> db.students.find() 
+
+ $position modifier: 
+ -------------------- 
+
+Bydefault elements will be added at the end of the array. But we can add elements in the required position. For this we have to use $position modifier.  
+To use $position modifier, compulsory we should use $each modifier. 
+i.e $position without $each is always invalid. 
+
+Syntax:
+~~~~~~
+
+{
+    $push: {
+        <array>:{
+            [value1, value2, values],
+            $position: <num></num>
+        }
+    }
+}
+
+
+<num>  indicates the position where we have to add element. array follows zero   based indexing. i.e index of first element is 0
+
+e.g1: To add element at the beginning:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+We have to use num as 0
+
+> db.students.insertOne({_id:7, marks:[10, 20, 30, 40]})
+
+> db.students.update(
+    {_id: 7},
+    {
+        $push: {
+            "marks": {
+                $each: [50],
+                $position: 0
+            }
+        }
+    }
+);
+
+
+To add element at 3rd index:
+````````````````````````````
+db.students.update(
+    {_id: 7},
+    {
+        $push: {
+            "marks": {
+                $each: [60],
+                $position: 3
+            }
+        }
+    }
+);
+
+```
+{ _id: 7, marks: [ 50, 10, 20, 60, 30, 40 ] }
+```
+
+Negetive index:
+~~~~~~~~~~~~~~
+
+We can use negative index to add elements from the end. -1 indicates the position just before last element in the array.  eg-1: 
+> db.students.update(           
+    {_id: 7},    
+    {       
+        $push: {          
+            marks: {  
+                $each: [70],       
+                $position: -1  
+            }    
+        } 
+    }
+);
+
+
+ eg-2: 
+> db.students.update(           
+    {_id: 7},    
+    {       
+        $push: {          
+            marks: {  
+                $each: [80],       
+                $position: -2  
+            }    
+        } 
+    }
+);
+
+````
+{
+    _id: 7,
+    marks: [
+      50, 10, 20, 60,
+      30, 80, 70, 40
+    ]
+  }
+  ```
+
+  Q. IF NUM > size of array , then will it be added at the end ? Yes
+
+eg3:
+>  db.students.update(
+    {_id: 7},
+    {
+        $push: {
+            marks: {
+                $each: [1, 2, 3],
+                $position: -3
+            }
+        }
+    }
+);
+
+
+```
+{
+    _id: 7,
+    marks: [
+      50, 10, 20, 60, 30,
+       1,  2,  3, 80, 70,
+      40
+    ]
+  }
+
+```
+
