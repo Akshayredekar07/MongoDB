@@ -16,7 +16,7 @@
 ### MongoDB Shell:
 - Acts as a client that helps send queries to the server.
 
-[MongoDB Documentation](https://claude.site/artifacts/a8482635-e1c1-4dab-97ef-17f37a6f2820)
+[Operating system workflow](https://claude.site/artifacts/a8482635-e1c1-4dab-97ef-17f37a6f2820)
 
 ## Default Databases in MongoDB
 
