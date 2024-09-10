@@ -1,1 +1,210 @@
-This is the content of mongodb 26.txt
+
+CRUD Operations:
+~~~~~~~~~~~~~~~
+
+D : Delete 
+
+Deleting Document from the collection:
+``````````````````````````````````````
+
+MongoDB provides the following methods to delete document from the collection.
+
+1. deleteOne()
+2. deleteMany()
+3. remove()
+
+1. deleteOne()
+``````````````
+To delete only one document that matches the query criteria.
+
+Syntax:
+
+db.collection.deleteOne()
+
+2. deleteMany():
+````````````````` 
+To delete all match document that match the query criteria 
+
+
+use This data:
+
+db.employees.insertMany([
+  {_id: 1, eno: 100, ename: "Sunny", esal: 1000, eaddr: "Mumbai"},
+  {_id: 2, eno: 200, ename: "Bunny", esal: 2000, eaddr: "Hyderabad"},
+  {_id: 3, eno: 300, ename: "Chinny", esal: 3000, eaddr: "Mumbai"},
+  {_id: 4, eno: 400, ename: "Vinny", esal: 4000, eaddr: "Delhi"},
+  {_id: 5, eno: 500, ename: "Pinny", esal: 5000, eaddr: "Chennai"},
+  {_id: 6, eno: 600, ename: "Tinny", esal: 6000, eaddr: "Mumbai"},
+  {_id: 7, eno: 700, ename: "Zinny", esal: 7000, eaddr: "Delhi"}
+]);
+
+
+Q1. Delete the first matched document where eaddr is Mumbai?
+> db.employees.deleteOne({eaddr: "Mumbai"})
+
+```
+storedb> db.employees.deleteOne({eaddr: "Mumbai"})
+{ acknowledged: true, deletedCount: 1 }
+```
+Only first matched document is delete
+
+Q2. Delete all documents where eaddr is Mumbai?
+> db.employees.deleteMany({eaddr: "Mumbai"})
+
+```
+storedb> db.employees.deleteMany({eaddr: "Mumbai"})
+{ acknowledged: true, deletedCount: 2 }
+storedb> db.employees.find()
+[
+  { _id: 2, eno: 200, ename: 'Bunny', esal: 2000, eaddr: 'Hyderabad' },
+  { _id: 4, eno: 400, ename: 'Vinny', esal: 4000, eaddr: 'Delhi' },
+  { _id: 5, eno: 500, ename: 'Pinny', esal: 5000, eaddr: 'Chennai' },
+  { _id: 7, eno: 700, ename: 'Zinny', esal: 7000, eaddr: 'Delhi' }
+]
+```
+
+Q3. Delete all document where esal is greater than 3000?
+
+ { _id: 2, eno: 200, ename: 'Bunny', esal: 2000, eaddr: 'Hyderabad' },
+  { _id: 4, eno: 400, ename: 'Vinny', esal: 4000, eaddr: 'Delhi' },
+  { _id: 5, eno: 500, ename: 'Pinny', esal: 5000, eaddr: 'Chennai' },
+  { _id: 7, eno: 700, ename: 'Zinny', esal: 7000, eaddr: 'Delhi' }
+
+  after:
+
+> db.employees.deleteMany({esal: {$gt: 3000}})
+
+```
+storedb> db.employees.deleteMany({esal: {$gt: 3000}})
+{ acknowledged: true, deletedCount: 3 }
+storedb> db.employees.find()
+[
+  { _id: 2, eno: 200, ename: 'Bunny', esal: 2000, eaddr: 'Hyderabad' }
+]
+```
+
+Q4. Delete all documents where esal is greq than 500 and eaddr is Delhi?
+
+> db.employees.drop()
+
+// insert the data again 
+
+> db.employees.deleteMany({$and : [{esal: {$gt:500}}, {eaddr: "Delhi"}]})
+
+```
+toredb> db.employees.deleteMany({$and : [{esal: {$gt:500}}, {eaddr: "Delhi"}]})
+{ acknowledged: true, deletedCount: 2 }
+storedb> db.employees.find()
+[
+  { _id: 1, eno: 100, ename: 'Sunny', esal: 1000, eaddr: 'Mumbai' },
+  { _id: 2, eno: 200, ename: 'Bunny', esal: 2000, eaddr: 'Hyderabad' },
+  { _id: 3, eno: 300, ename: 'Chinny', esal: 3000, eaddr: 'Mumbai' },
+  { _id: 5, eno: 500, ename: 'Pinny', esal: 5000, eaddr: 'Chennai' },
+  { _id: 6, eno: 600, ename: 'Tinny', esal: 6000, eaddr: 'Mumbai' }
+]
+```
+
+2nd way:
+````````
+db.employees.deleteMany({esal: {$gt:5000}, eaddr: "Delhi"})
+
+
+Q5. How to delete all documents from the collection without deleting collection?
+
+> db.employees.deleteMany({})
+
+```
+storedb> db.employees.find().count()
+5
+storedb> db.employees.deleteMany({})
+{ acknowledged: true, deletedCount: 5 }
+storedb> db.employees.find().count()
+0
+storedb> show collections
+books
+courses
+emp
+employees
+homeBudget
+learners
+phonebook
+shop
+student
+student1
+students
+students1
+````
+
+3. remove()
+```````````
+We can use remove() method to delete either sinlge document or multiple document.
+
+Syntax:
+```````
+
+> db.collection.remove({query}, justOne)
+
+-justOne field can take boolean value.
+- If it is ture then only one document will be deleted.
+- If it is flase, then all documents will be deleted.
+- the default value is flase, Hence, Bydefault remove() method will delete multiple documents.
+
+Q1. To delete all documents where eaddr is Mumbai?
+> db.employees.remove({eaddr: "Mumbai"})
+
+```
+toredb> db.employees.remove({eaddr: "Mumbai"})
+{ acknowledged: true, deletedCount: 3 }
+storedb> db.employees.find()
+[
+  { _id: 2, eno: 200, ename: 'Bunny', esal: 2000, eaddr: 'Hyderabad' },
+  { _id: 4, eno: 400, ename: 'Vinny', esal: 4000, eaddr: 'Delhi' },
+  { _id: 5, eno: 500, ename: 'Pinny', esal: 5000, eaddr: 'Chennai' },
+  { _id: 7, eno: 700, ename: 'Zinny', esal: 7000, eaddr: 'Delhi' }
+]
+storedb>
+```
+
+Q2. To delete only first matched documentv where eaddr is Delhi?
+// Remove all documents where eaddr is "Delhi"
+db.employees.remove({eaddr: "Delhi"}, true);
+```
+storedb> db.employees.remove({eaddr: "Delhi"}, true);
+{ acknowledged: true, deletedCount: 1 }
+```
+
+How to delete a collection?
+```````````````````````````
+
+db.collection.drop()
+
+To delete a collection including all documents
+
+e.g: 
+db.student1.drop()
+
+How to drop a database
+``````````````````````
+
+> db.dropDatabase()
+
+It will delete current database.
+
+db.getName() : to get name of the database 
+
+Q1. What is the differnece between the following 2 commands?
+db.collection.drop() --> Both collection and document will be deleted
+db.collection.deleteMany() --> Only document will be delete but not collection.
+
+
+Note : In general deleting collections and databases are responsibilites of database admin
+
+
+Q2. What is the differnece between the following commands?
+
+> db.collection.deleteMany({})
+> db.collection.remove({})
+> db.collection.remove({}, false)
+
+- All all equal and it deleting all documents from the collection.
+

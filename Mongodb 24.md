@@ -1,0 +1,176 @@
+
+# MongoDB Modifiers: $sort and $slice
+
+## $sort Modifier
+We can use the `$sort` modifier to sort elements of an array during a `$push` operation.
+
+To use the `$sort` modifier, we must use the `$each` modifier. Without `$each`, the `$sort` modifier cannot be used.
+
+We can pass an empty array `[]` to the `$each` modifier to see the effect of only `$sort`.
+
+### Syntax:
+```js
+db.collection.update(
+  {},
+  {
+    $push: {
+      <array>: {
+        $each: [value1, value2, ...],
+        $sort: 1 | -1
+      }
+    }
+  }
+)
+```
+
+- `1`: means ascending order.  
+- `-1`: means descending order.
+
+### Example 1: Sorting Array Elements in Ascending Order
+```js
+db.students.update({_id:7},{$push: {marks: {$each:[15,25,10],$sort: 1}}})
+
+db.students.find()
+```
+
+Output:
+```json
+{
+  _id: 7,
+  marks: [
+     1,  2,  3, 10, 10, 15,
+    20, 25, 30, 40, 50, 60,
+    70, 80
+  ]
+}
+```
+
+### Example 2: Sorting Without Adding Any Element
+```js
+db.students.update({_id:7},{$push: {marks: {$each: [], $sort: -1}}})
+
+db.students.find()
+```
+
+Output:
+```json
+{
+  _id: 7,
+  marks: [
+    80, 70, 60, 50, 40, 30,
+    25, 20, 15, 10, 10,  3,
+     2,  1
+  ]
+}
+```
+
+## $slice Modifier
+The `$slice` modifier limits the number of array elements during a `$push` operation.
+
+To use the `$slice` modifier, we must use the `$each` modifier. Without `$each`, the `$slice` modifier cannot be used.
+
+We can pass an empty array `[]` to `$each` to see the effect of only `$slice`.
+
+### Syntax:
+```js
+db.collection.update(
+  {},
+  {
+    $push: {
+      <array>: {
+        $each: [value1, value2, ...],
+        $slice: <num>
+      }
+    }
+  }
+)
+```
+
+The `<num>` can be:
+- `0`: Updates the array to an empty array.
+- Positive number: Retains only the first `<num>` elements.
+- Negative number: Retains only the last `<num>` elements.
+
+### Example 1: Retaining Last 6 Elements
+```js
+db.students.update({_id: 7},{$push: {marks: {$each:[5,6,7],$slice: -6}}})
+```
+
+Output:
+```json
+{ _id: 7, marks: [ 3, 2, 1, 5, 6, 7 ] }
+```
+
+### Example 2: Retaining First 3 Elements
+```js
+db.students.update({_id: 7},{$push: {marks: {$each: [], $slice: 3}}})
+```
+
+Output:
+```json
+{ _id: 7, marks: [ 3, 2, 1 ] }
+```
+
+### Example 3: Retaining Zero Elements
+Updates the array to an empty array.
+```js
+db.students.update({_id:7},{$push:{marks: {$each:[], $slice: 0}}})
+```
+
+Output:
+```json
+{ _id: 7, marks: [] }
+```
+
+## Order of Modifiers:
+The order of modifiers in the query is not important, but MongoDB processes the `$push` operation in the following sequence:
+1. Update the array to add elements in the correct position.
+2. Apply sort, if specified.
+3. Slice the array, if specified.
+4. Store the array.
+
+### Example:
+```js
+db.students.update({_id:7},{ $push: { marks: {$slice: 3, $sort: -1, $each: [4,1,7,2,6,3,9,2,8,4,5]}}})
+```
+
+Output:
+```json
+{ _id: 7, marks: [ 9, 8, 7 ] }
+```
+
+## Additional Notes:
+- If the array does not exist, `$push` adds the array field with the specified elements.
+  
+  Example:
+  ```js
+  db.students.update({_id:7},{$push: {marks1: {$each: [10,20,30]}}})
+  ```
+
+- If the field is not an array, the `$push` operation will fail.
+  
+```js
+  db.students.update({_id:7},{$set: {name:"Durga"}})
+```
+Output
+```json
+ { _id: 7, marks: [ 9, 8, 7 ], marks1: [ 10, 20, 30 ], name: 'Durga' }
+```
+
+  Example:
+  ```js
+  db.students.update({_id:7},{$push: {name: {$each: [10,20,30]}}})
+  ```
+
+  Error:
+  ```json
+  "errmsg" : "The field 'name' must be an array but is of type string in document {_id: 7.0}"
+  ```
+
+## Summary:
+- `$push` operator → To add elements to an array.
+- `$each` modifier → To add multiple elements.
+- `$position` modifier → To add elements at a specified position.
+- `$sort` modifier → To sort elements after addition.
+- `$slice` modifier → To limit the number of elements.
+```

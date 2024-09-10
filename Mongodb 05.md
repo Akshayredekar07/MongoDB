@@ -165,7 +165,7 @@ In production, for every database, we have to maintain a cloned/replica database
 
 After inserting how many instances, you are expecting acknowledgment. This can be specified using the `WriteConcern` property.
 
-```javascript
+```
 if w: 0 ==> No acknowledgment
 if w: 1 ==> Acknowledgment after inserting the document in the primary database.
 if w: 2 ==> Acknowledgment after inserting the document in the primary database and replica-1.

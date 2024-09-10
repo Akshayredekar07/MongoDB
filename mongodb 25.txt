@@ -1,1 +1,191 @@
-This is the content of mongodb 25.txt
+
+5. $addToSet operator: 
+---------------------- 
+It is exactly same as $push operator except that it won't allow 
+duplicates. 
+It adds elements to the array iff array does not contain already those 
+elements. 
+There is no effect on already existing duplicates. 
+
+ 
+ case study: 
+ ----------- 
+ db.students.insertOne({_id:1,marks:[70,87,90]}) 
+ db.students.insertOne({_id:2,marks:[90,88,92]}) 
+ db.students.insertOne({_id:3,marks:[85,100,90]}) 
+ db.students.insertOne({_id:4,marks:[79,85,80]}) 
+ db.students.insertOne({_id:5,marks:[88,88,92]}) 
+ db.students.insertOne({_id:6,marks:[95,90,96]})  
+ 
+ eg-1: Adding duplicate element 
+ ------------------------------ 
+ {_id:5,marks:[88,88,92]} 
+ 
+ > db.students.update({_id:5},{$addToSet: {marks: 88}}) 
+ 
+ storedb> db.students.update({_id:5},{$addToSet: {marks: 88}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+
+{ _id: 5, marks: [ 88, 88, 92 ] },
+
+In this case 88 won't be added because it is already available. 
+
+
+eg-2: Adding non-duplicate element: ------------------------------------ 
+> db.students.update({_id:5},{$addToSet: {marks: 90}})
+
+storedb> db.students.update({_id:5},{$addToSet: {marks: 90}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+storedb> db.students.find()
+[
+  { _id: 1, marks: [ 70, 87, 90 ] },
+  { _id: 2, marks: [ 90, 88, 92 ] },
+  { _id: 3, marks: [ 85, 100, 90 ] },
+  { _id: 4, marks: [ 79, 85, 80 ] },
+  { _id: 5, marks: [ 88, 88, 92, 90 ] },
+  { _id: 6, marks: [ 95, 90, 96 ] }
+]
+
+
+
+eg-3: Adding multiple elements: 
+------------------------------- 
+To add multiple elements we have to use $each modifier.  
+
+> db.students.update({_id:5},{$addToSet: {marks: {$each: 
+[10,20,88,90,30]}}}) 
+
+```
+  {
+    _id: 5,
+    marks: [
+      88, 88, 92, 90,
+      10, 20, 30
+    ]
+  }
+```
+
+Note: 
+In the case of $push operator, order terminology is applicable. 
+
+Hence we can use $position, $sort, $slice modifiers.  But in the case of $addToSet operator, order terminology is not applicable. 
+
+Hence we cannot use $position, $sort, $slice modifiers.  But $each modifier applicable for both $push and $addToSet operators.
+
+> db.students.update({_id:5},{$addToSet: {marks: {$each: [7,8,9], $position: 2}}})   
+```
+MongoServerError: Found unexpected fields after $each in $addToSet: { $each: [ 7, 8, 9 ], $position: 2 }
+```
+
+
+6. Removing Elements by using $pop operator: ------------------------------------------- 
+We can use $pop operator to remove either first or last element from 
+the array. 
+Syntax: 
+------ 
+{   
+    $pop: {<array>:-1|1} 
+}  
+
+-1  --->To remove the first element  
+1   --->To remove the last element  
+
+> db.students.update({_id:5}, {$pop: {marks: -1}})
+```
+ { _id: 5, marks: [ 88, 92, 90, 10, 20, 30 ] },
+ ```
+
+> db.students.update({_id:5}, {$pop: {marks: 1}})
+```
+ { _id: 5, marks: [ 88, 92, 90, 10, 20 ] },
+ ```
+
+If you want to remove middle element the $pop not works 
+
+
+$pull operator:
+~~~~~~~~~~~~~~~
+
+We can use $pull operator either 
+
+1. To remove all instances of specified element.
+2. To remove elements that match the given condition 
+
+Syntax:
+~~~~~~
+
+{
+    $pull: {<arry>: <value> | <value>}
+}
+
+
+db.students.insert({_id:7, marks:[10, 20, 30, 10, 20 ,40, 50, 60, 70, 80, 90, 100]})
+
+eg1: To delete all instances of 10 
+marks:[10, 20, 30, 10, 20 ,40, 50, 60, 70, 80, 90, 100]
+
+> db.students.update({_id:7},{$pull: {marks: 10}})
+
+```
+{
+    _id: 7,
+    marks: [
+      20, 30, 20, 40,  50,
+      60, 70, 80, 90, 100
+    ]
+  }
+  ```
+
+e.g-2: to remove all element which are greater than or equal to 50
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+> db.students.update({_id:7}, {$pull: {marks: {$gte: 50}}})
+
+```
+ { _id: 7, marks: [ 20, 30, 20, 40 ] }
+ ```
+
+Removing elements by using $pullAll operator:
+--------------------------------------------
+
+By using $pull , we can delete all instances of a sinlge element or element based on some condition.
+
+but by using $pullAll, we can delete all instances of a given list of a multiple Elements.
+
+Syntax:
+~~~~~~
+
+{
+    $pullAll: {{<array>: [value1, value2, value3,...]}}
+}
+
+> db.students.insertOne({_id:8, marks:[10, 20,10,10, 20, 20, 10,30,40,50,60]})
+
+> db.students.update({_id:8}, {$pullAll: {marks: [10, 20, 30, 40]}})
+```
+ { _id: 8, marks: [ 50, 60 ] }
+ ```
+
+Summanry of array update operator:
+----------------------------------
+1. $
+2. $[]
+3. $[element]
+4. $push operator with modifiers: $each, $position, $sort, $slice
+5. $addToSet operator with $each modifier 
+6. $pop
+7. $pull 
+8. $pullAll
+
