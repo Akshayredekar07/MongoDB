@@ -1,1 +1,168 @@
 
+
+MongoDB Utilities(Database tools):
+``````````````````````````````````
+
+1. mongoimport
+2. mongoexpert
+3. mongodump 
+4. mongorestore
+etc
+
+All these are seperate applications.
+These can be used for data management into mongodb.
+These are command line utilities and we have to execute from command prompt only but not from mongodb shell.
+
+Bydefault these are not avilable and we have to install seperatly
+
+How to install thses tools:
+```````````````````````````
+
+Go to mongodb Database tools:
+
+https://www.mongodb.com/try/download/database-tools
+
+download: zip file
+    >> extract:
+        >> bin 
+
+copy utility tools to our mongodb bin folder 
+
+  
+1. mongoimport
+``````````````
+We can use this tool to import this data from the files like json files, csv file etc 
+
+Syntax:
+mongoimport -d databaseName -c colltionName --file fileName --jsonArray
+
+eg: 
+mongoimport -d durgadb -c students --file students.json --jsonArray
+
+eg2:  To import data from csv files
+
+mongoimport -d databaseName -c colltionName --type csv --headerline --drop emp.csv
+
+
+
+2. mongoexpert
+``````````````
+
+we can use this tool to export specifc data from given collection to the files.
+
+The data will be stored in the file in json format.
+
+Syntax:
+mongoexpert -d databaseName -c collectionName -o fileName 
+
+-d ===> databaseName
+-c ===> collectionName
+-0 ===> Name of the file where exported data shoud be written.
+
+eg: To export data from employees collection of durga database to emp.txt file.
+
+
+mongoexport -d storedb -c employees -o emp.txt
+
+emp.txt 
+```
+{"_id":2,"eno":200,"ename":"Bunny","esal":2000,"eaddr":"Hyderabad"}
+{"_id":5,"eno":500,"ename":"Pinny","esal":5000,"eaddr":"Chennai"}
+{"_id":7,"eno":700,"ename":"Zinny","esal":7000,"eaddr":"Delhi"}
+```
+
+MongoDB backup and restore by using mongodump and mongorestore:
+```````````````````````````````````````````````````````````````
+3. mongodump:
+``````````````
+By using mongodump and mongorestore commands we can take backup of the database and we can restore the backup data.
+
+mongodump ===> Create a dump from mongodb database.
+mongorestore ===> To restore data from dump.
+
+
+Case-1: To create dump for all databases: ----------------------------------------- 
+We have to use mongodump command without any arguments.
+
+PS C:\Users\Akshay\Documents\DATABASES\MongoDB Durgasoft> mongodump
+2024-09-10T17:02:44.606+0530    writing admin.system.version to dump\admin\system.version.bson
+2024-09-10T17:02:44.612+0530    done dumping admin.system.version (1 document)
+2024-09-10T17:02:44.613+0530    writing Institute.Students to dump\Institute\Students.bson
+2024-09-10T17:02:44.615+0530    writing storedb.student to dump\storedb\student.bson
+2024-09-10T17:02:44.616+0530    writing storedb.learners to 
+.
+.
+.
+
+
+Note: 
+Note: dump folder got created which contains data from all databases. For every collection 2 files will be created. 
+bson file==>contains original data in bson format 
+json file==>contains metadata related to that collection.
+
+
+
+C:\USERS\AKSHAY\DOCUMENTS\DATABASES\MONGODB DURGASOFT\DUMP
+├───admin
+│       system.version.bson
+│       system.version.metadata.json
+│
+├───student
+│       data.bson
+│       data.metadata.json
+│
+├───Studentdb
+│       Students.bson
+│       Students.metadata.json
+│
+├───testdb
+│       students.bson
+│       students.metadata.json
+│
+└───university
+        teachers.bson
+        teachers.metadata.json
+
+
+
+Note: The original data stored in bson form where as metadata stored in json form. But we can convert bson data to json format by using bsondump tool.  
+
+bsondump ===>To convert data from bson format to json format  
+
+eg-1: Convert bson data from teachers.bson to json form and display 
+to the console of university database.
+
+To go the dump folder:
+> cd dump
+> cd university
+> bsondump teachers.bson
+````
+PS C:\Users\Akshay\Documents\DATABASES\MongoDB Durgasoft\dump> cd .\university\
+PS C:\Users\Akshay\Documents\DATABASES\MongoDB Durgasoft\dump\university> bsondump teachers.bson
+{"_id":{"$oid":"655a39933059ce8497f86e6f"},"tname":"Aliya","dname":"Comp","salary":{"$numberInt":"11000"},"exp":{"$numberInt":"2"}}
+{"_id":{"$oid":"655a39933059ce8497f86e70"},"tname":"Jinal","dname":"Comp","salary":{"$numberInt":"12000"},"exp":{"$numberInt":"3"}}
+{"_id":{"$oid":"655a39933059ce8497f86e71"},"tname":"Isha","dname":"Comp","salary":{"$numberInt":"10000"},"exp":{"$numberInt":"1"}}
+{"_id":{"$oid":"655a39933059ce8497f86e72"},"tname":"Tejal","dname":"Mech","salary":{"$numberInt":"10500"},"exp":{"$numberInt":"2"}}
+{"_id":{"$oid":"655a39933059ce8497f86e73"},"tname":"Harshi","dname":"Mech","salary":{"$numberInt":"14000"},"exp":{"$numberInt":"2"}}
+{"_id":{"$oid":"655a39943059ce8497f86e74"},"tname":"Urvi","dname":"Mech","salary":{"$numberInt":"24000"},"exp":{"$numberInt":"5"}}
+{"_id":{"$oid":"655a39943059ce8497f86e75"},"tname":"Rutu","dname":"IT","salary":{"$numberInt":"10000"},"exp":{"$numberInt":"1"}}
+{"_id":{"$oid":"655a39943059ce8497f86e76"},"tname":"Trupti","dname":"IT","salary":{"$numberInt":"20000"},"exp":{"$numberInt":"4"}}
+{"_id":{"$oid":"655a39943059ce8497f86e77"},"tname":"Surbhi","dname":"IT","salary":{"$numberInt":"12000"},"exp":{"$numberInt":"2"}}
+{"_id":{"$oid":"655a39943059ce8497f86e78"},"tname":"Shweta","dname":"Civil","salary":{"$numberInt":"10000"},"exp":{"$numberInt":"1"}}
+{"_id":{"$oid":"655a39943059ce8497f86e79"},"tname":"Athira","dname":"Civil","salary":{"$numberInt":"12000"},"exp":{"$numberInt":"2"}}
+{"_id":{"$oid":"655a39973059ce8497f86e7a"},"tname":"Tejaswee","dname":"Civil","salary":{"$numberInt":"15000"},"exp":{"$numberInt":"3"}}
+2024-09-10T17:15:03.529+0530    12 objects found
+```
+
+Displying this data into files:
+```````````````````````````````
+
+eg2: convert bsondata from teachers.bson from and write to teachers.json file.
+
+Bydefault bsondump tool outputs data to the standard output(console). 
+We can write converted data to the files also. 
+For this we have to use --outFile argument.  
+
+bsondump --outFile=teachers.json  teachers.bson
+
+

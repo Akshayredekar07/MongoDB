@@ -1,1 +1,54 @@
-This is the content of mongodb 30.txt
+2. Studio 3T: 
+------------- 
+Formerly MongoChef. 
+The most popular DB Tool for MongoDB operations. 
+https://robomongo.org/ 
+
+studio-3t-x64.exe
+
+3. NoSQL Manager for MongoDB: 
+-----------------------------  
+NoSQL Manager for MongoDB Desktop tool for Mongo database 
+management, administration and development 
+https://www.mongodbmanager.com/   
+NoSQL Manager for MongoDB Freeware Free for non-commercial use, limited functional  
+
+mongodbmanagerfree_inst.exe
+
+Features 
+Full support for MongoDB and MongoDB Enterprise versions from 2.2 to 
+4.4 
+Certified on MongoDB Enterprise. Supports Kerberos, LDAP and 
+MONGODB-X509 authentications 
+Fully functional MongoDB UI Shell with code autocompletion, syntax 
+highlighting and hints 
+Fully compatible with Amazon DocumentDB and MongoDB on Azure Cosmos DB 
+Support of replica sets, standalone hosts and sharded clusters 
+connections 
+Easy-to-use document viewer and editor with Tree, Table and JSON 
+view modes 
+Simple view and management of all MongoDB objects: databases, 
+collections, views, indices, users, roles and functions 
+SSH tunneling for MongoDB connections 
+Performance monitoring tools 
+Import tables from MySQL and SQL Server databases 
+Export documents to CSV, XML, JSON and XLSX file formats 
+Import documents from JSON and CSV files 
+LINQ Query Tool
+
+
+
+4. MongoDB Compass: 
+-------------------  
+https://www.mongodb.com/products/compass  
+The GUI for MongoDB.  
+The easiest way to explore and manipulate your MongoDB data. 
+Visually explore your data.  
+Run ad hoc queries in seconds. 
+Interact with your data with full CRUD functionality. 
+View and optimize your query performance. 
+Available on Linux, Mac, or Windows. 
+Compass empowers you to make smarter decisions about indexing, 
+document validation, and more.  
+
+Connection String: mongodb://localhost:27017 

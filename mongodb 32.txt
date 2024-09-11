@@ -1,1 +1,153 @@
-This is the content of mongodb 32.txt
+Aggregation Framework: 
+---------------------- 
+
+db.employees.insertMany([
+  {_id: 1, eno: 100, ename: "Sunny", esal: 1000, eaddr: "Mumbai"},
+  {_id: 2, eno: 200, ename: "Bunny", esal: 2000, eaddr: "Hyderabad"},
+  {_id: 3, eno: 300, ename: "Chinny", esal: 3000, eaddr: "Mumbai"},
+  {_id: 4, eno: 400, ename: "Vinny", esal: 4000, eaddr: "Delhi"},
+  {_id: 5, eno: 500, ename: "Pinny", esal: 5000, eaddr: "Chennai"},
+  {_id: 6, eno: 600, ename: "Tinny", esal: 6000, eaddr: "Mumbai"},
+  {_id: 7, eno: 700, ename: "Zinny", esal: 7000, eaddr: "Delhi"}
+]);
+
+
+
+db.employees.find()
+db.employees.find({eaddr:"Hyderabad"})
+
+Total salary of all employees?
+Total salary of all employees irrespective of city 
+Total salary of all employees city wise 
+Average salary of all employees city wise 
+minimum salary of employees city wise 
+maximum salary of employees city wise 
+What is the min salary of all employees 
+What is the max salary of all employees 
+etc 
+
+Such type of requirements won't be fullfilled by find() methods.  
+
+find() methods will provide existing data as it is. If we want to process documents and to provide results in our customized format then we should go for aggregation framework.  
+
+We can implement aggregation by using aggregate() method. aggregate() method is more powerful than find() method.
+
+aggregate() vs find(): 
+---------------------- 
+aggregate() method can perform some processing and provide results 
+in our customized format.
+
+But find() method will always provide data as it is without performing 
+any processing and in the existing format only.
+
+
+eg-1: To find total salary of all employees?  
+
+db.employees.aggregate([ { $group: {_id:null,totalsalary:{$sum:"$esal"}}} ]);
+
+```
+toredb> db.employees.aggregate([ { $group: {_id:null,totalsalary:{$sum:"$es
+al"}}} ]);
+[ { _id: null, totalsalary: 28000 } ]
+```
+
+Note:  $group stage: 
+------------ 
+1. It is the most important stage. 
+2. It can be used to group documents based on required fields. 
+It merges different documents into new documents.  
+    eg: group all documents city wise group all documents department wise 
+3. The first parameter in $group stage is always _id. 
+4. We should use _id to specify field based on which we have to 
+perform grouping. 
+    ie _id defines by which fields we can group. 
+5. If we want to process all records then we have to provide null value 
+to _id field. 
+6. $group is exactly same as group by phrase in relational databases. 
+
+Accumulator operators: 
+---------------------- 
+These operators can be used for accumulation purpose. The following various accumulator operators: 
+1. $sum: Returns a sum of numerical values. Ignores non-numeric 
+values. 
+2. $avg: Returns an average of numerical values. Ignores non-numeric 
+values. 
+3. $max: Returns the highest expression value for each group. 
+4. $min: Returns the lowest expression value for each group. etc 
+
+eg-2: To find average salary of all employees? 
+db.employees.aggregate([ { $group: {_id:null,averagesalary:{$avg:"$esal"}}} ])
+
+eg-3: To find max salary of all employees? 
+db.employees.aggregate([ { $group: {_id:null,maxsalary:{$max:"$esal"}}} ])  
+
+{ "_id" : null, "maxsalary" : 7000 }  
+
+eg-4: To find min salary of all employees? 
+db.employees.aggregate([ { $group: {_id:null,minsalary:{$min:"$esal"}}} ])  
+
+{ "_id" : null, "minsalary" : 1000 }
+
+eg-5: To find max salary city wise? We have to group documents city wise. ie based on eaddr field. 
+
+db.employees.aggregate([{$group: {_id:"$eaddr",maxSalary:{$max:"$esal"}}} ])
+
+```
+storedb> db.employees.aggregate([{$group: {_id:"$eaddr",maxSalary:{$max:"$esal"}}} ])
+[
+  { _id: 'Chennai', maxSalary: 5000 },
+  { _id: 'Hyderabad', maxSalary: 2000 },
+  { _id: 'Mumbai', maxSalary: 6000 },
+  { _id: 'Delhi', maxSalary: 7000 }
+]
+```
+
+eg-6: To find city wise total salary? 
+db.employees.aggregate([{$group: {_id:"$eaddr",totalSalary:{$sum:"$esal"}}} ]) 
+
+```
+storedb> db.employees.aggregate([{$group: {_id:"$eaddr",totalSalary:{$sum:"$esal"}}} ])
+[
+  { _id: 'Chennai', totalSalary: 5000 },
+  { _id: 'Hyderabad', totalSalary: 2000 },
+  { _id: 'Mumbai', totalSalary: 10000 },
+  { _id: 'Delhi', totalSalary: 11000 }
+]
+```
+
+eg-7: To find city wise average salary? 
+db.employees.aggregate([{$group: {_id:"$eaddr",averageSalary:{$avg:"$esal"}}} ])  
+```
+storedb> db.employees.aggregate([{$group: {_id:"$eaddr",averageSalary:{$avg:"$esal"}}} ])
+[
+  { _id: 'Chennai', averageSalary: 5000 },
+  { _id: 'Delhi', averageSalary: 5500 },
+  { _id: 'Mumbai', averageSalary: 3333.3333333333335 },
+  { _id: 'Hyderabad', averageSalary: 2000 }
+]
+```
+
+
+eg-8: To find total number of employees? 
+db.employees.aggregate([{$group: {_id:null,employeecount:{$sum:1}}}]) 
+
+ For every document add 1 to the employeecount.  
+
+ ```
+ storedb> db.employees.aggregate([{$group: {_id:null,employeecount:{$sum:1}}}])
+[ { _id: null, employeecount: 7 } ]
+```
+
+eg-9: To find total number of employees city wise? 
+
+db.employees.aggregate([{$group: {_id:"$eaddr",employeecount:{$sum:1}}} ]) 
+```
+storedb> db.employees.aggregate([{$group: {_id:"$eaddr",employeecount:{$sum:1}}} ])
+[
+  { _id: 'Chennai', employeecount: 1 },
+  { _id: 'Delhi', employeecount: 2 },
+  { _id: 'Mumbai', employeecount: 3 },
+  { _id: 'Hyderabad', employeecount: 1 }
+]
+```
+

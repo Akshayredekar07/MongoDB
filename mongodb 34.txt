@@ -1,1 +1,69 @@
-This is the content of mongodb 34.txt
+
+
+
+5. limit stage:
+```````````````
+
+It limits the number of documents passedto the next stage in the pipeline.
+
+Syntax:
+
+{$limit: <positive integer>}
+
+$limit takes a positive integer that secifies the maximum number of documents to pass along
+
+eg1: To find the number of employees whose salary greater than 1500. find such employee that count citywise< display documents in ascending order of employee count.
+
+db.employees.aggregate([
+    {$match : {esal: {$gt: 1500}}},
+    {$group: {_id: "$eaddr", empCount: {$sum: 1}}},
+    {$sort: {empCount: 1}},
+    {$limit: 2}
+])
+
+```
+storedb> db.employees.aggregate([
+...     {$match : {esal: {$gt: 1500}}},
+...     {$group: {_id: "$eaddr", empCount: {$sum: 1}}},
+...     {$sort: {empCount: 1}},
+...     {$limit: 2}
+... ])
+[ { _id: 'Chennai', empCount: 1 }, { _id: 'Hyderabad', empCount: 1 } ]
+```
+
+5. $skip stage:
+```````````````
+{$skip <positive integer>}
+
+$skip  takes a positive integer that specifies the maximum numer of documents of documents to skip.
+
+eg1: To find the number of employees whose salary greater than 1500. find such employee that count citywise display documents in ascending order of employee count.Skip first 2 documents and display only remaining documents?
+
+db.employees.aggregate([
+    {$match: {esal: {$gt: 1500}}},
+    {$group: {_id: "$eaddr", empCount: {$sum:1}}},
+    {$sort: {empCount: 1}},
+    {$skip: 2}    
+])
+
+```
+[ { _id: 'Delhi', empCount: 2 }, { _id: 'Mumbai', empCount: 2 } ]
+```
+
+6. $out stage:
+``````````````
+$out Takes the documents returned by the aggregation pipeline and writes them to a specified collection. You can specify the output database.
+
+Syntax:
+{ $out: { db: "<output-db>", coll: "<output-collection>" } }
+{ $out: "<output-collection>" } 
+
+
+$group stage ---> To group documents based on some fields
+$sort stage ---> To sort order of documents based on some field
+$project stage ---> To select only required documents based on some condition.
+$match stage ---> To filter documents based on some condition 
+$limit stage ---> To limit the number of documents to the next stage in the pipeline
+$skip stage ---> T skip specified number of documents and only remaining documents will be send to the next stage 
+$out stage ---> To write the result of one pipeline to the specifiedd collection.
+

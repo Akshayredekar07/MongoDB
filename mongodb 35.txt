@@ -1,1 +1,62 @@
-This is the content of mongodb 35.txt
+
+
+Assignment: 
+
+quizdata.csv
+
+To import data from csv file:
+`````````````````````````````
+ 
+ mongoimport --db quizdb --collection quiz --type csv --headerline --file quizdata.csv
+
+ { _id: 2, name: 'TeamB', round: 1, points: 3, city: 'Bangalore' },
+  { _id: 6, name: 'TeamB', round: 2, points: 10, city: 'Bangalore' },
+  { _id: 7, name: 'TeamC', round: 2, points: 3, city: 'Chennai' },
+  { _id: 8, name: 'TeamD', round: 2, points: 7, city: 'Hyderabad' },
+  { _id: 9, name: 'TeamA', round: 3, points: 10, city: 'Hyderabad' },
+  { _id: 10, name: 'TeamB', round: 3, points: 4, city: 'Bangalore' },
+  { _id: 5, name: 'TeamA', round: 2, points: 5, city: 'Hyderabad' },
+  { _id: 11, name: 'TeamC', round: 3, points: 1, city: 'Chennai' },
+  { _id: 12, name: 'TeamD', round: 3, points: 5, city: 'Hyderabad' },
+  { _id: 1, name: 'TeamA', round: 1, points: 5, city: 'Hyderabad' },
+  { _id: 13, name: 'TeamA', round: 4, points: 8, city: 'Hyderabad' },
+  { _id: 14, name: 'TeamB', round: 4, points: 7, city: 'Bangalore' },
+  { _id: 15, name: 'TeamC', round: 4, points: 7, city: 'Chennai' },
+  { _id: 16, name: 'TeamD', round: 4, points: 9, city: 'Hyderabad' },
+  { _id: 3, name: 'TeamC', round: 1, points: 4, city: 'Chennai' },
+  { _id: 4, name: 'TeamD', round: 1, points: 5, city: 'Hyderabad' }
+
+ Q1. To find TeamA total number of points in all 4 rounds?
+
+db.quiz.aggregate([
+    {$match: {name: "TeamA"}},
+    {$group: {_id: "$name", totalScore: {$sum: "$points"}}}
+ ]);
+
+```
+[ { _id: 'TeamA', totalScore: 28 } ]
+```
+
+Q2. to find the average score of TeamA per round?
+
+db.quiz.aggregate([
+    {$match: {name: "TeamA"}},
+    {$group: {_id: "$name", avgScore: {$avg: "$points"}}},
+    {$project: {_id:0, avgScore: 1}}
+ ]);
+
+ [ { avgScore: 7 } ]
+
+
+ Q3. to find total score of Hyderabad Teams?
+
+db.quiz.aggregate([  
+    { $match: { city: "Hyderabad" } },  
+    { $group: { _id: null, totalScore: { $sum: "$points" } } },  
+    { $project: { _id: 0, totalScore: 1 } }  
+])
+
+```
+[ { totalScore: 54 } ]
+```
+

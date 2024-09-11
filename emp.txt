@@ -1,0 +1,3 @@
+{"_id":2,"eno":200,"ename":"Bunny","esal":2000,"eaddr":"Hyderabad"}
+{"_id":5,"eno":500,"ename":"Pinny","esal":5000,"eaddr":"Chennai"}
+{"_id":7,"eno":700,"ename":"Zinny","esal":7000,"eaddr":"Delhi"}

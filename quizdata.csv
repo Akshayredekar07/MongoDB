@@ -1,0 +1,17 @@
+_id,name,round,points,city  
+1,TeamA,1,5,Hyderabad  
+2,TeamB,1,3,Bangalore  
+3,TeamC,1,4,Chennai  
+4,TeamD,1,5,Hyderabad  
+5,TeamA,2,5,Hyderabad  
+6,TeamB,2,10,Bangalore  
+7,TeamC,2,3,Chennai  
+8,TeamD,2,7,Hyderabad  
+9,TeamA,3,10,Hyderabad  
+10,TeamB,3,4,Bangalore  
+11,TeamC,3,1,Chennai  
+12,TeamD,3,5,Hyderabad  
+13,TeamA,4,8,Hyderabad  
+14,TeamB,4,7,Bangalore  
+15,TeamC,4,7,Chennai  
+16,TeamD,4,9,Hyderabad

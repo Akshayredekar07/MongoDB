@@ -1,0 +1,12 @@
+{"_id":{"$oid":"655a39933059ce8497f86e6f"},"tname":"Aliya","dname":"Comp","salary":{"$numberInt":"11000"},"exp":{"$numberInt":"2"}}
+{"_id":{"$oid":"655a39933059ce8497f86e70"},"tname":"Jinal","dname":"Comp","salary":{"$numberInt":"12000"},"exp":{"$numberInt":"3"}}
+{"_id":{"$oid":"655a39933059ce8497f86e71"},"tname":"Isha","dname":"Comp","salary":{"$numberInt":"10000"},"exp":{"$numberInt":"1"}}
+{"_id":{"$oid":"655a39933059ce8497f86e72"},"tname":"Tejal","dname":"Mech","salary":{"$numberInt":"10500"},"exp":{"$numberInt":"2"}}
+{"_id":{"$oid":"655a39933059ce8497f86e73"},"tname":"Harshi","dname":"Mech","salary":{"$numberInt":"14000"},"exp":{"$numberInt":"2"}}
+{"_id":{"$oid":"655a39943059ce8497f86e74"},"tname":"Urvi","dname":"Mech","salary":{"$numberInt":"24000"},"exp":{"$numberInt":"5"}}
+{"_id":{"$oid":"655a39943059ce8497f86e75"},"tname":"Rutu","dname":"IT","salary":{"$numberInt":"10000"},"exp":{"$numberInt":"1"}}
+{"_id":{"$oid":"655a39943059ce8497f86e76"},"tname":"Trupti","dname":"IT","salary":{"$numberInt":"20000"},"exp":{"$numberInt":"4"}}
+{"_id":{"$oid":"655a39943059ce8497f86e77"},"tname":"Surbhi","dname":"IT","salary":{"$numberInt":"12000"},"exp":{"$numberInt":"2"}}
+{"_id":{"$oid":"655a39943059ce8497f86e78"},"tname":"Shweta","dname":"Civil","salary":{"$numberInt":"10000"},"exp":{"$numberInt":"1"}}
+{"_id":{"$oid":"655a39943059ce8497f86e79"},"tname":"Athira","dname":"Civil","salary":{"$numberInt":"12000"},"exp":{"$numberInt":"2"}}
+{"_id":{"$oid":"655a39973059ce8497f86e7a"},"tname":"Tejaswee","dname":"Civil","salary":{"$numberInt":"15000"},"exp":{"$numberInt":"3"}}

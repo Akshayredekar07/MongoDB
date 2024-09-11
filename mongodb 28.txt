@@ -1,1 +1,97 @@
-This is the content of mongodb 28.txt
+
+
+To restore all databases from dump by using mongorestore
+````````````````````````````````````````````````````````
+
+testdb> db.dropDatabase()
+
+We have to use mongorestore command without any arguments. 
+
+> cd dump
+> mongorestore
+
+
+Case-3: How to backup and restore a single database? ----------------------------------------------------- 
+We have to specify required database as argument to mongodump 
+command. 
+
+mongodump --db durgadb
+
+To restore a single database:
+ ----------------------------- 
+ 
+mongorestore --db testdb  dump\testdb
+
+
+```
+PS C:\Users\Akshay\Documents\DATABASES\MongoDB Durgasoft> mongorestore --db testdb  dump\testdb
+2024-09-10T17:50:27.144+0530    The --db and --collection flags are deprecated for this use-case; please use --nsInclude instead, i.e. with --nsInclude=${DATABASE}.${COLLECTION}
+2024-09-10T17:50:27.145+0530    building a list of collections to restore from dump\testdb dir
+2024-09-10T17:50:27.147+0530    reading metadata for testdb.students from dump\testdb\students.metadata.json
+2024-09-10T17:50:27.171+0530    restoring testdb.students from dump\testdb\students.bson
+2024-09-10T17:50:27.191+0530    finished restoring testdb.students (0 documents, 0 failures)
+2024-09-10T17:50:27.191+0530    no indexes to restore for collection testdb.students
+2024-09-10T17:50:27.191+0530    0 document(s) restored successfully. 0 document(s) failed to restore.
+````
+
+
+Case-4: How to backup and restore a single collection: ----------------------------------------------------- 
+
+mongodump --db durgadb --collection employees
+```
+PS C:\Users\Akshay\Documents\DATABASES\MongoDB Durgasoft> mongodump --db durgadb --collection employees
+2024-09-10T17:58:37.578+0530    writing durgadb.employees to dump\durgadb\employees.bson
+2024-09-10T17:58:37.582+0530    done dumping durgadb.employees (3 documents)
+```
+
+
+Restore a particular collection: 
+------------------------------- 
+mongorestore  --db durgadb --collection employees dump\durgadb\employees.bson
+
+```
+PS C:\Users\Akshay\Documents\DATABASES\MongoDB Durgasoft> mongorestore  --db durgadb --collection employees dump\durgadb\employees.bson
+2024-09-10T18:00:55.772+0530    checking for collection data in dump\durgadb\employees.bson
+2024-09-10T18:00:55.774+0530    reading metadata for durgadb.employees from dump\durgadb\employees.metadata.json
+2024-09-10T18:00:55.793+0530    restoring durgadb.employees from dump\durgadb\employees.bson
+2024-09-10T18:00:55.865+0530    finished restoring durgadb.employees (3 documents, 0 failures)
+2024-09-10T18:00:55.866+0530    no indexes to restore for collection durgadb.employees
+2024-09-10T18:00:55.866+0530    3 document(s) restored successfully. 0 document(s) failed to restore.
+````
+
+```
+durgadb> show collections
+employees
+durgadb> db.employees.find()
+[
+  {
+    _id: ObjectId("66e03b5338c99ac267d1ebdb"),
+    employee_id: 103,
+    name: 'Samuel Jackson'
+  },
+  {
+    _id: ObjectId("66e03b5938c99ac267d1ebdc"),
+    employee_id: 103,
+    name: 'Samuel Jackson'
+  },
+  {
+    _id: ObjectId("66e03b6238c99ac267d1ebdd"),
+    employee_id: 102,
+    name: 'Jane Smith'
+  }
+]
+```
+
+
+Note: We can take dump and restore all databases or a particular 
+database or a particular collection.  
+
+Summary: 
+-------- 
+1. mongoimport --->To import data from the files 
+2. mongoexport --->To export mongodb data to the files 
+3. mongodump --->To create dump for database 
+4. bsondump --->To convert bson data into json data 
+5. mongorestore --->To restore data from the dump.
+
+
