@@ -106,6 +106,3 @@ Q4. List out all docuemntfrom the collection where "Title" is NoSQL?
 
 Q4. List out all docuemntfrom the collection where reviews are 675?
 >> db.books.find({"reviews":675})
-
-
-

@@ -198,5 +198,3 @@ Q6. Querying the multiple datatypes?
 Q. Select all documents where phoneNumber value is of string or double.
 
 > db.phonebook.find({phoneNumber: {$type:[2,1]}}).pretty()
-
-

@@ -60,3 +60,211 @@ db.quiz.aggregate([
 [ { totalScore: 54 } ]
 ```
 
+Q4. To find winner team name?
+teamwise totalScore, sort in descending order based on totalScore, limit to 1 display team name 
+
+db.quiz.aggregate([
+    { $group: { _id: "$name", totalScore: { $sum: "$points" } } },
+    {$sort: {totalScore: -1}},
+    {$limit: 1}
+])
+
+
+```
+quizdb> db.quiz.aggregate([
+...     { $group: { _id: "$name", totalScore: { $sum: "$points" } } },
+...     {$sort: {totalScore: -1}},
+...     {$limit: 1}
+... ])
+[ { _id: 'TeamA', totalScore: 28 } ]
+```
+
+Q5. to find  2nd position team name(Runner up)?
+
+quizdb> db.quiz.aggregate([
+...     { $group: { _id: "$name", totalScore: { $sum: "$points" } } },
+...     {$sort: {totalScore: -1}}
+... ])
+[
+  { _id: 'TeamA', totalScore: 28 },
+  { _id: 'TeamD', totalScore: 26 },
+  { _id: 'TeamB', totalScore: 24 },
+  { _id: 'TeamC', totalScore: 15 }
+]
+
+
+db.quiz.aggregate([
+    { $group: { _id: "$name", totalScore: { $sum: "$points" } } },
+    {$sort: {totalScore: -1}},
+    {$skip: 1},
+    {$limit: 1}
+])
+
+quizdb> db.quiz.aggregate([
+...     { $group: { _id: "$name", totalScore: { $sum: "$points" } } },
+...     {$sort: {totalScore: -1}},
+...     {$skip: 1},
+...     {$limit: 1}
+... ])
+[ { _id: 'TeamD', totalScore: 26 } ]
+
+Q6. To find team name with least score?
+
+
+db.quiz.aggregate([
+{ $group: { _id: "$name", totalScore: { $sum: "$points" } } },
+{$sort: {totalScore: 1}},
+{$limit: 1}
+])
+
+
+```
+quizdb> db.quiz.aggregate([
+... { $group: { _id: "$name", totalScore: { $sum: "$points" } } },
+... {$sort: {totalScore: 1}},
+... {$limit: 1}
+... ])
+[ { _id: 'TeamC', totalScore: 15 } ]
+```
+
+
+Q7. To find total points of winner team?
+
+db.quiz.aggregate([
+    { $group: { _id: "$name", totalScore: { $sum: "$points" } } },
+    {$sort: {totalScore: -1}},
+    {$limit: 1},
+    {$project: {_id:0, totalScore:1}}
+])
+
+```
+[ { totalScore: 28 } ]
+```
+
+
+Q8. to find teamwise score?
+
+db.quiz.aggregate([
+    { $group: { _id: "$name", totalScore: { $sum: "$points" } } },
+    {$sort: {name: 1}},
+])
+
+```
+{ _id: 'TeamC', totalScore: 15 },
+  { _id: 'TeamD', totalScore: 26 },
+  { _id: 'TeamB', totalScore: 24 },
+  { _id: 'TeamA', totalScore: 28 }
+```
+
+
+Q9. Show only winning Team and city?
+
+db.quiz.aggregate([
+    { $group: { _id: "$name", city: {$first:"$city"}, totalScore: { $sum: "$points" } } },
+    {$sort: {totalScore: -1}},
+    {$limit: 1},
+    {$project: {_id:0, name: "$_id", totalScore:1, city: 1,}}
+])
+
+```
+quizdb> db.quiz.aggregate([
+...     { $group: { _id: "$name", city: {$first:"$city"}, totalScore: { $sum: "$points" } } },
+...     {$sort: {totalScore: -1}},
+...     {$limit: 1},
+...     {$project: {_id:0, name: "$_id", totalScore:1, city: 1,}}
+... ])
+[ { city: 'Hyderabad', totalScore: 28, name: 'TeamA' } ]
+```
+
+
+Q10. to find teamwise avg score in ascending order?
+
+db.quiz.aggregate([
+{ $group: { _id: "$name", avgScore: { $sum: "$points" } } },
+{$sort: {avgScore: -1}},
+{$limit: 1},
+{$project: {_id:0, name: "$_id", avgScore:1, city: 1,}}
+])
+
+
+Q11. To find teamwise total score in descending order? 
+
+db.quiz.aggregate([
+    {$group: {_id: "$name", totalScore: {$sum: "$points"}}},
+    {$sort: {totalScore: -1}}
+])
+
+Q12. To find teamwise total score and arrange according to alphabetiacal order of city names, If two cities with same then arrange according to ascending order and write to citywisetotal collection?
+
+db.quiz.aggregate([
+    {$group: {_id:"$name", city:{$first: "$city"}, totalScore: {$sum: "$points"} }},
+    {$sort: {city:1, totalScore:1}},
+    {$out: "citywisetotal"}
+])
+
+```
+quizdb> db.quiz.aggregate([
+...     {$group: {_id:"$name", city:{$first: "$city"}, totalScore: {$sum: "$points"} }},
+...     {$sort: {city:1, totalScore:1}},
+...     {$out: "citywisetotal"}
+... ])
+
+
+quizdb> show collections
+citywisetotal
+quiz
+quizdb> db.citywisetotal.find()
+[
+  { _id: 'TeamB', city: 'Bangalore', totalScore: 24 },
+  { _id: 'TeamC', city: 'Chennai', totalScore: 15 },
+  { _id: 'TeamD', city: 'Hyderabad', totalScore: 26 },
+  { _id: 'TeamA', city: 'Hyderabad', totalScore: 28 }
+]
+```
+
+Note: Within the same pipeline we can use same stage multiple times also.
+
+
+db.quiz.aggregate([
+    { $group: { _id: "$name", city: {$first:"$city"}, totalScore: { $sum: "$points" } } }
+])
+
+After first group stage:
+````````````````````````
+[
+  { _id: 'TeamD', city: 'Hyderabad', totalScore: 26 },
+  { _id: 'TeamA', city: 'Hyderabad', totalScore: 28 },
+  { _id: 'TeamB', city: 'Bangalore', totalScore: 24 },
+  { _id: 'TeamC', city: 'Chennai', totalScore: 15 }
+]
+```
+
+db.quiz.aggregate([
+    { $group: { _id: "$name", city: {$first:"$city"}, totalScore: { $sum: "$points" } } },
+    {$group: {_id: "$city", cityWiseScore: {$sum: "$totalScore"}}}
+])
+
+After second group stage:
+```````````````````````````
+
+```
+[
+  { _id: 'Hyderabad', cityWiseScore: 54 },
+  { _id: 'Bangalore', cityWiseScore: 24 },
+  { _id: 'Chennai', cityWiseScore: 15 }
+]
+```
+
+After third stage:
+``````````````````
+db.quiz.aggregate([
+    { $group: { _id: "$name", city: {$first:"$city"}, totalScore: { $sum: "$points" } } },
+    {$group: {_id: "$city", cityWiseScore: {$sum: "$totalScore"}}},
+    {$group: {_id:null, allCitiesScores:{$sum: "$cityWiseScore"} }},
+    {$project: {_id: 0}}
+])
+
+```
+[ { allCitiesScores: 93 } ]
+```
+
