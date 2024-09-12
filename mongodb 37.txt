@@ -1,1 +1,64 @@
-This is the content of mongodb 37.txt
+
+MongoDB with Python:
+````````````````````
+
+Upto this we communicated with MongoDB server by using mongodb shell. ie. MongoDB associated as a client to perofrm our required database operations.
+
+
+Python communicate with mongodb using pymongo Drive software
+
+Steps:
+`````
+
+1. import pymongo
+    >> from pymongo import *
+
+2. Create a client to communicate with mongodb server
+    >> client = MongoClient()
+    >> client = MongoClient(localhost,27017)
+    >> client = MongoClient("mongodb://localhost:27017/")
+    >> client = MongoClient("mongodb://127.0.0.1:27017/")
+
+
+3. Create/connect to database
+    >> db = client["EmployeeDB"]
+
+4. Create or connect to collection
+    >> collection = db.employees 
+
+5. By using collection object we can perform all database operations
+
+A. To insert a document:
+
+    collection.insert_one()
+    collection.insert_many()
+    collection.insert()
+
+B. To read a document:
+
+    collection.find_one()
+    collection.find_many()
+    collection.find()
+
+C. To update a document:
+
+    collection.update_one()
+    collection.update_many()
+    collection.update()
+
+D. To delete a document:
+
+    collection.delete_one()
+    collection.delete_many()
+    collection.delete()
+
+
+
+6. To close the connection:
+
+    client.close()
+
+ 
+ eg-1: Write a python scrpit to connect to mongodb server and display the list of available databases?
+
+ We have to use client.list_database_names() to get the list of available databases
