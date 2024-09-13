@@ -1,11 +1,7 @@
-Here's the improved format for the CRUD operations, focusing on **Update Operation**:
-
----
-
 ### CRUD Operations
 
-**C** – Create Operation | Insert Operation  
-**R** – Retrieve Operation | Read Operation  
+**C** – Create/Insert Operation  
+**R** – Retrieve?Read Operation  
 **U** – Update Operation  
 **D** – Delete Operation
 
