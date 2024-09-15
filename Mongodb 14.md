@@ -10,7 +10,7 @@ To import data from a CSV file into MongoDB, you can use the `mongoimport` comma
 mongoimport -d storedb -c emp --type csv --headerline --drop vidya.csv
 ```
 
-In the above example:
+In the above example use:
 - `-d storedb`: Specifies the database name (`storedb`).
 - `-c emp`: Specifies the collection name (`emp`).
 - `--type csv`: Specifies the file type as CSV.
