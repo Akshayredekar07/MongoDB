@@ -20,28 +20,28 @@
 
 ## Default Databases in MongoDB
 
-### 1. Admin Database:
+**1. Admin Database:**
 - Stores user authentication information like usernames, passwords, and roles.
 - Used by administrators for managing users and roles.
 
-### 2. Config Database:
+**2. Config Database:**
 - Stores configuration details of the MongoDB server.
 
-### 3. Local Database:
+**3. Local Database:**
 - Utilized during the replication process by the admin.
 
 **Warning:** Don't delete these databases, as MongoDB may not function properly without them.
 
 ## Data Format in MongoDB
 
-### Data Input/Storage:
+**Data Input/Storage:**
 - End-user/developer provides data in JSON format.
 - MongoDB server stores data in BSON format.
 
 **Example**:
 - JSON: `{"name":"durga"}` → Stored as BSON in MongoDB.
 
-### Why BSON Conversion?
+**Why BSON Conversion?**
 1. **Extended Data Types**:
    - JSON only supports a limited number of types like String, Number, Array, Boolean, Null.
    - BSON provides extra types like:
@@ -55,7 +55,7 @@
 
 BSON offers efficient storage and supports extra data types, which are advantages over JSON.
 
-## Conversion Process:
+### Conversion Process:
 - **Insertion/Creation**: JSON → BSON
 - **Read/Retrieval Operation**: BSON → EJSON
 
@@ -65,29 +65,27 @@ BSON offers efficient storage and supports extra data types, which are advantage
 
 ## MongoDB Concepts and Operations
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-## Creation of Database and Collection:
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+### Creation of database and collection:
 
-### Creation of database command:
+**Creation of database command:**
 ```shell
 use durgadb
 ```
 - The database won't be created at the beginning; it will be created dynamically.
 - Whenever we create a collection or insert a document, the database is created automatically.
 
-### How to create a collection:
+**How to create a collection:**
 ```shell
 db.createCollection("Employees")
 ```
 
-### To view the databases:
+**To view the databases:**
 ```shell
 show dbs
 ```
 - `db` is a predefined object in MongoDB, which we can use for various methods.
 
-### Show collections:
+**Show collections:**
 ```shell
 show collections
 ```
@@ -102,26 +100,24 @@ Employees
 Students
 ```
 
-### Q. How to drop a collection?
+**Q. How to drop a collection?**
 ```shell
 db.Students.drop()
 ```
 
-### Q. How to drop the database?
+**Q. How to drop the database?**
 ```shell
 db.dropDatabase()
 ```
 
-Check the current database name:
+**Check the current database name:**
 ```shell
 db.getName()
 ```
 
-
 ### Basic CRUD Operations using MongoDB:
 
-
-### 1. Create/Insert a document:
+**_1. Create/Insert a document:_**
 ```shell
 db.collection.insert()
 db.collection.insertOne()
@@ -135,7 +131,7 @@ db.Students.insertOne({roll:27, name:"Rohit", university:"SPPU"})
 db.Students.insertOne({roll:31, name:"Karan", university:"SPPU"})
 ```
 
-### 2. Read/Retrieve a document:
+**_2. Read/Retrieve a document:_**
 ```shell
 db.collection.find()    # To get all records in the collection
 db.collection.findOne() # To get one record in the collection based on a match condition
@@ -177,7 +173,7 @@ durga> db.Students.find()
 ]
 ```
 
-### 3. Update a document:
+**_3. Update a document:_**
 ```shell
 db.collection.updateOne()
 db.collection.updateMany()
@@ -206,7 +202,7 @@ durga> db.Students.updateOne({name: 'Rohit'}, { $set: {university: 'BAMU'}})
 ```
 **Note**: Anything prefixed with a `$` symbol is a predefined operator in MongoDB.
 
-### 4. Delete a document:
+**_4. Delete a document:_**
 ```shell
 db.collection.deleteOne()
 db.collection.deleteMany()
@@ -223,7 +219,7 @@ durga> db.Students.deleteOne({name:"Karan"})
 { acknowledged: true, deletedCount: 1 }
 ```
 
-### Important Note:
+**Important Note:**
 ```shell
 use Studentdb
 db.Students.insertOne({name:"Rohit", city:"beed"})
