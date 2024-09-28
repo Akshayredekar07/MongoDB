@@ -7,7 +7,7 @@ Sometimes we can take document inside another document, such type of document is
 db.Employees.insertOne({empno:76, ename:"Ankit", esal:2345, eaddr:"Pune", hobbies:{h1:"Swimming", h2:"Reading"}})
 ```
 
-  **Example**
+**Example**
 ```json
 {
     "specifications": {
@@ -239,7 +239,6 @@ The item can be string, number, or object also.
 }
 ```
 
-
 ## Basic Idea about CRUD Operations
 
 ### C - Create Operation | Insert Operation
@@ -270,10 +269,10 @@ The only reason is **uniqueness**.
 
 To generate a timestamp from ObjectId:
 
-```cmd
-db.books.find()[0]  # List out only the first document of the books collection
-db.books.find()[0]._id  # Object id of first document
-db.books.find()[0]._id.getTimestamp()  # Get timestamp of the object id
+```javascript
+db.books.find()[0]  // List out only the first document of the books collection
+db.books.find()[0]._id  // Object id of first document
+db.books.find()[0]._id.getTimestamp()  // Get timestamp of the object id
 ```
 
 ---
@@ -367,4 +366,5 @@ ObjectId uniqueness is for **collections** not for the entire **database**.
 - Default ObjectId consists of timestamp, machine identifier, process id, etc. (True)
 - The advantage of using default ObjectId is that we can get several details like timestamp, etc. (True)
 - If we provide our own ObjectId value, it may not generate timestamp, machine identifier, process id, etc. (True)
+
 
