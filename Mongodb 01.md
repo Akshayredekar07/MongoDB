@@ -1,22 +1,22 @@
-# Humongous (adjective)  
+## Humongous (adjective)  
 Extremely large; huge.  
 **Example:** A humongous building, humongous amounts of money.  
 
-# MongoDB: Overview  
+## MongoDB: Overview  
 MongoDB is a popular and trending database used in various applications.  
 
 **Vendor:** MongoDB  
 **Website:** [https://www.MongoDB.com](https://www.MongoDB.com)  
 
-## Where to Use MongoDB  
+### Where to Use MongoDB  
 - Desktop applications  
 - Mobile applications  
 - Web applications (most popular)  
 
-# Full Stack Developer:  
+### Full Stack Developer:  
 **Stack:** The technologies used to develop web applications are collectively called a stack.  
 
-## MERN Stack  
+### MERN Stack  
 - **M** - MongoDB  
 - **E** - ExpressJS  
 - **R** - ReactJS  
@@ -27,7 +27,7 @@ MongoDB is a popular and trending database used in various applications.
 **Server-Side Runtime Environment:** NodeJS  
 **Database:** MongoDB  
 
-## JavaScript-based technologies:  
+### JavaScript-based technologies:  
 - NodeJS  
 - ReactJS  
 - ExpressJS  
@@ -38,7 +38,7 @@ MongoDB: Internally uses Mozilla's SpiderMonkey JavaScript Engine.
 # MongoDB Database   
 **Type:** Document database/NoSQL database  
 
-## Relational Database vs. Document Database  
+### Relational Database vs. Document Database  
 There are two most common types of databases:  
 
 ### SQL Database/Relational Database:  
@@ -54,7 +54,7 @@ To retrieve data, we write join queries to collect data from different tables.
 Data is stored in separate documents, and each document is independent of others.  
 **Examples:** MongoDB, Cassandra  
 
-# MongoDB Structure  
+### MongoDB Structure  
 MongoDB contains multiple databases.  
 A physical database in MongoDB contains several logical databases.  
 Each logical database contains several collections.  
@@ -66,7 +66,7 @@ Each logical database contains several collections.
 
 **Customer Collection:** Contains several documents  
 
-## Data Representation in MongoDB  
+### Data Representation in MongoDB  
 **Format:** JSON (BSON)  
 
 **JSON:** JavaScript Object Notation  
@@ -97,8 +97,8 @@ Internally, data is stored in BSON.
 }
 ```
 
-# Key Characteristics of MongoDB Database  
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  
+### Key Characteristics of MongoDB Database  
+ 
 1. All information related to a document will be stored in a single place. To retrieve data, it is not required to perform join operations, and hence retrieval is very fast.  
 
 2. Documents are independent of each other and have no schema. Hence, we can store unstructured data like video, audio files, etc.  
