@@ -1,5 +1,11 @@
 
 # MongoDB Concepts
+<style>
+  h1 {
+    color: #a3e635;
+    text-align: center;
+  }
+</style>
 
 ## Database and Collections
 - **Database** → Several collections
