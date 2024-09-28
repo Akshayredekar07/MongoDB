@@ -1,4 +1,3 @@
-
 # Document Type Database/NoSQL Database
 
 ## Document
@@ -17,7 +16,7 @@
 MongoDB server can be local or remote.
 
 - To launch/start MongoDB Server: `mongod` command.
-- To launch/start MongoDB Shell: `mongo` command.
+- To launch/start MongoDB Shell: `mongosh` command.
 
 ### GUI support for MongoDB Shell:
 - Compass
