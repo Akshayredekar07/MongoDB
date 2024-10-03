@@ -1,5 +1,5 @@
 $not Operator
-~~~~~~~~~~~~~
+*************
 
 It is jsut to perform inverse operation.
 
