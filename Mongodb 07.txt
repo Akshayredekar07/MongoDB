@@ -1,5 +1,4 @@
-
-`````````Querying the Nested document```````````````````
+Querying the Nested document
 
 Database name :  storedb
 Collection name : books
