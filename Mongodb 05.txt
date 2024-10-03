@@ -5,7 +5,7 @@ Atomaticity
 
 
 Ordered Insertion in Bulk Insertions:
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
 We can perfrom bulk inserts either by using insertMany() or insert() methods.
 All documents present inside given array will be inserted into collection
