@@ -109,4 +109,6 @@ Internally, data is stored in BSON.
 
 5. We can store a very huge amount of data, and hence scalability is more.  
 
-**Note:** Performance and flexibility are the biggest assets of MongoDB.
+**Note:** Performance and flexibility are the biggest assets of MongoDB. 
+
+Let' See you Again!
