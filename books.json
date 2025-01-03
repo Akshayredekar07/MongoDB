@@ -1,109 +1,325 @@
 [
     {
-        "Title": "MongoDB",
-        "isbn": "2345",
-        "reviews": 5,
-        "versions": {
-            "version1": 2015,
-            "version2": 2017
+        "title": "Linux in simple way",
+        "isbn": 6677,
+        "downloadable": false,
+        "no_of_reviews": 1,
+        "tags": [
+            "os",
+            "freeware",
+            "shell programming"
+        ],
+        "languages": [
+            "english",
+            "hindi",
+            "telugu"
+        ],
+        "author": {
+            "name": "Shiva Ramachandran",
+            "callname": "Shiv",
+            "profile": {
+                "exp": 8,
+                "courses": 3,
+                "books": 2
+            }
         }
     },
     {
-        "Title": "NoSQL",
-        "isbn": "2346",
-        "reviews": 41,
-        "versions": {
-            "version1": 2001,
-            "version2": 2004
+        "title": "Mastering Python",
+        "isbn": 1234,
+        "downloadable": true,
+        "no_of_reviews": 25,
+        "tags": [
+            "python",
+            "programming",
+            "scripting"
+        ],
+        "languages": [
+            "english",
+            "spanish",
+            "french"
+        ],
+        "author": {
+            "name": "Amit Desai",
+            "callname": "Amit",
+            "profile": {
+                "exp": 10,
+                "courses": 5,
+                "books": 3
+            }
         }
     },
     {
-        "Title": "Advanced python with Durga",
-        "isbn": "1111",
-        "reviews": 7000,
-        "versions": { "version1": 2019, "version2": 2021 }
-      },
-      {
-        "Title": "Java with Durga",
-        "isbn": "9876",
-        "reviews": 675,
-        "versions": { "version1": 2013, "version2": 2016 }
-      },
-
-
-
-      {
-        "category": "Software Engineering",
-        "books": [
-          {
-            "title": "Clean Code: A Handbook of Agile Software Craftsmanship",
-            "author": "Robert C. Martin",
-            "publishedYear": 2008,
-            "ISBN": "9780132350884",
-            "genres": ["Software Engineering", "Programming"],
-            "language": "English",
-            "pages": 431,
-            "reviews": [
-              {
-                "reviewer": "Alice Johnson",
-                "rating": 5,
-                "comment": "A must-read for all developers!"
-              },
-              {
-                "reviewer": "Bob Lee",
-                "rating": 4,
-                "comment": "Great insights, but some parts are repetitive."
-              }
-            ]
-          },
-
-          {
-            "title": "Design Patterns: Elements of Reusable Object-Oriented Software",
-            "author": [
-              "Erich Gamma",
-              "Richard Helm",
-              "Ralph Johnson",
-              "John Vlissides"
-            ],
-            "publishedYear": 1994,
-            "ISBN": "9780201634983",
-            "genres": ["Software Engineering", "Design Patterns"],
-            "language": "English",
-            "pages": 395,
-            "reviews": [
-              {
-                "reviewer": "Charlie Brown",
-                "rating": 5,
-                "comment": "A foundational book for understanding design patterns."
-              }
-            ]
-          },
-          {
-            "title": "The Pragmatic Programmer: Your Journey to Mastery",
-            "author": [
-              "Andrew Hunt",
-              "David Thomas"
-            ],
-            "publishedYear": 1999,
-            "ISBN": "9780201616222",
-            "genres": ["Software Engineering", "Programming"],
-            "language": "English",
-            "pages": 320,
-            "reviews": [
-              {
-                "reviewer": "David White",
-                "rating": 4,
-                "comment": "Full of practical advice for programmers."
-              },
-              {
-                "reviewer": "Emma Green",
-                "rating": 4,
-                "comment": "Good book, but some advice feels dated."
-              }
-            ]
-          }
-        ]
-      }
-      
+        "title": "Web Development Essentials",
+        "isbn": 8910,
+        "downloadable": true,
+        "no_of_reviews": 40,
+        "tags": [
+            "web development",
+            "html",
+            "css",
+            "javascript"
+        ],
+        "languages": [
+            "english",
+            "german",
+            "mandarin"
+        ],
+        "author": {
+            "name": "Sara Lee",
+            "callname": "Sara",
+            "profile": {
+                "exp": 7,
+                "courses": 4,
+                "books": 2
+            }
+        }
+    },
+    {
+        "title": "Data Science with R",
+        "isbn": 3456,
+        "downloadable": false,
+        "no_of_reviews": 15,
+        "tags": [
+            "data science",
+            "R",
+            "statistics"
+        ],
+        "languages": [
+            "english",
+            "portuguese",
+            "russian"
+        ],
+        "author": {
+            "name": "Nikhil Patel",
+            "callname": "Nik",
+            "profile": {
+                "exp": 9,
+                "courses": 6,
+                "books": 4
+            }
+        }
+    },
+    {
+        "title": "Introduction to Machine Learning",
+        "isbn": 7890,
+        "downloadable": true,
+        "no_of_reviews": 50,
+        "tags": [
+            "machine learning",
+            "AI",
+            "neural networks"
+        ],
+        "languages": [
+            "english",
+            "japanese",
+            "korean"
+        ],
+        "author": {
+            "name": "Emily Zhang",
+            "callname": "Emily",
+            "profile": {
+                "exp": 12,
+                "courses": 7,
+                "books": 5
+            }
+        }
+    },
+    {
+        "title": "Deep Learning Concepts",
+        "isbn": 9876,
+        "downloadable": true,
+        "no_of_reviews": 42,
+        "tags": [
+            "deep learning",
+            "neural networks",
+            "tensorflow"
+        ],
+        "languages": [
+            "english",
+            "french"
+        ],
+        "author": {
+            "name": "Sarah Lee",
+            "callname": "Sarah",
+            "profile": {
+                "exp": 10,
+                "courses": 8,
+                "books": 4
+            }
+        }
+    },
+    {
+        "title": "Natural Language Processing",
+        "isbn": 1234,
+        "downloadable": false,
+        "no_of_reviews": 28,
+        "tags": [
+            "nlp",
+            "machine learning",
+            "python"
+        ],
+        "languages": [
+            "english",
+            "german"
+        ],
+        "author": {
+            "name": "Michael Chen",
+            "callname": "Michael",
+            "profile": {
+                "exp": 6,
+                "courses": 4,
+                "books": 2
+            }
+        }
+    },
+    {
+        "title": "Computer Vision Basics",
+        "isbn": 5678,
+        "downloadable": true,
+        "no_of_reviews": 38,
+        "tags": [
+            "computer vision",
+            "machine learning",
+            "python"
+        ],
+        "languages": [
+            "english",
+            "italian"
+        ],
+        "author": {
+            "name": "Olivia Wang",
+            "callname": "Olivia",
+            "profile": {
+                "exp": 9,
+                "courses": 6,
+                "books": 3
+            }
+        }
+    },
+    {
+        "title": "Introduction to Python Programming",
+        "isbn": 2468,
+        "downloadable": true,
+        "no_of_reviews": 90,
+        "tags": [
+            "python",
+            "programming",
+            "beginner"
+        ],
+        "languages": [
+            "english",
+            "spanish",
+            "french"
+        ],
+        "author": {
+            "name": "Liam Patel",
+            "callname": "Liam",
+            "profile": {
+                "exp": 7,
+                "courses": 4,
+                "books": 2
+            }
+        }
+    },
+    {
+        "title": "Data Structures and Algorithms in Java",
+        "isbn": 1357,
+        "downloadable": false,
+        "no_of_reviews": 75,
+        "tags": [
+            "java",
+            "algorithms",
+            "data structures"
+        ],
+        "languages": [
+            "english",
+            "mandarin",
+            "german"
+        ],
+        "author": {
+            "name": "Sophia Nguyen",
+            "callname": "Sophia",
+            "profile": {
+                "exp": 10,
+                "courses": 6,
+                "books": 3
+            }
+        }
+    },
+    {
+        "title": "Web Development with React.js",
+        "isbn": 9876,
+        "downloadable": true,
+        "no_of_reviews": 65,
+        "tags": [
+            "web development",
+            "react",
+            "javascript"
+        ],
+        "languages": [
+            "english",
+            "hindi",
+            "japanese"
+        ],
+        "author": {
+            "name": "Aditya Sharma",
+            "callname": "Aditya",
+            "profile": {
+                "exp": 8,
+                "courses": 5,
+                "books": 2
+            }
+        }
+    },
+    {
+        "title": "Mastering C++ Programming",
+        "isbn": 4321,
+        "downloadable": true,
+        "no_of_reviews": 80,
+        "tags": [
+            "c++",
+            "programming",
+            "intermediate"
+        ],
+        "languages": [
+            "english",
+            "russian",
+            "portuguese"
+        ],
+        "author": {
+            "name": "Katerina Ivanova",
+            "callname": "Katerina",
+            "profile": {
+                "exp": 12,
+                "courses": 7,
+                "books": 4
+            }
+        }
+    },
+    {
+        "title": "Introduction to Cybersecurity",
+        "isbn": 7654,
+        "downloadable": false,
+        "no_of_reviews": 70,
+        "tags": [
+            "cybersecurity",
+            "information security",
+            "hacking"
+        ],
+        "languages": [
+            "english",
+            "mandarin",
+            "arabic"
+        ],
+        "author": {
+            "name": "Mahmoud Khalil",
+            "callname": "Mahmoud",
+            "profile": {
+                "exp": 9,
+                "courses": 6,
+                "books": 3
+            }
+        }
+    }
 ]
-
